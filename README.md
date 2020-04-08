@@ -28,7 +28,7 @@ Also, the plan is to implement REST API for resources:
 Also, plan is to implement session based APIs, SSL and user privileges.
 
 This is server side subproject of Airduino project - air quality measurement based on arduino MCU models.
-Edge telemetry is on [Air Quality Monitor]:https://github.com/tihomirmagdic/air-quality-monitor
+Edge telemetry is on [Air Quality Monitor](https://github.com/tihomirmagdic/air-quality-monitor)
 
 There are scripts in package.json for easy development.
 
