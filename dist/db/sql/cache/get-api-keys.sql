@@ -1,0 +1,1 @@
+select apikey, id from airq.devices where enabled
