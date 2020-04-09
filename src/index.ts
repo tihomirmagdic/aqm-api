@@ -31,6 +31,29 @@ defineRoutes(app, config);
 
 const port = 5000;
 
+app.use(function(req, res, next) {
+  Promise.resolve().then(function () {
+    throw new Error('Path not found: ' + req.originalUrl)
+  }).catch(err => {
+		console.log(err);
+		res.status(400).end();
+	});
+});
+
+interface ResponseError extends Error {
+  status?: number;
+}
+
+app.use(function(error: ResponseError, req: any, res: any, next: any) {
+	console.error("Bad request", error);
+  if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
+		console.error("JSON syntax error");
+	}
+	console.error(error.stack)
+	res.status(400).end();
+	//res.status(400).send('Bad request')
+})
+
 app.listen(port, () => {
     console.log('\nReady for GET and other requests on http://localhost:' + port);
 });
