@@ -21,7 +21,7 @@ export const shDevicesCreate = Joi.object().keys({
   fconfiguration: Joi.string().allow(null),
   apikey: Joi.string().required(),
   note: Joi.string(),
-  enabled: Joi.boolean()
+  enabled: Joi.boolean(),
 });
 
 export const shDevicesValues = Joi.object().keys({
@@ -33,7 +33,7 @@ export const shDevicesValues = Joi.object().keys({
   fconfiguration: Joi.string().allow(null),
   apikey: Joi.string(),
   note: Joi.string(),
-  enabled: Joi.boolean()
+  enabled: Joi.boolean(),
 });
 
 export const shDevicesUpdate = Joi.object().keys({
@@ -61,14 +61,19 @@ export class DevicesRepository {
     return this.db.any(sql.getByIDs, { where });
   }
 
-  public getByOwner(owner: Number) {
+  public getByOwner(owner: number) {
     return this.db.any(sql.getByOwner, { owner });
   }
 
   public add(type: string, values: any): any {
     const colValues = this.pgp.helpers.values(values);
     const dbcall = type === "fast" ? this.db.none : this.db.one;
-    const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
+    const returning =
+      type === "full"
+        ? "returning *"
+        : type === "id"
+        ? "returning " + this.keys.join(", ")
+        : "";
     return dbcall(sql.add, { values, colValues, returning });
   }
 
@@ -79,11 +84,17 @@ export class DevicesRepository {
     if (type === "full") {
       return this.db.any(sql.update, { set, where, returning });
     } else {
-      return this.db.result(sql.update, { set, where, returning }, (r: IResult) => ({ updated: r.rowCount }));
+      return this.db.result(
+        sql.update,
+        { set, where, returning },
+        (r: IResult) => ({ updated: r.rowCount })
+      );
     }
   }
 
   public delete(where: any[]) {
-    return this.db.result(sql.remove, { where }, (r: IResult) => ({ deleted: r.rowCount }));
+    return this.db.result(sql.remove, { where }, (r: IResult) => ({
+      deleted: r.rowCount,
+    }));
   }
 }

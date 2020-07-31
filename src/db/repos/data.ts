@@ -240,7 +240,7 @@ export class DataRepository {
     const limit = Math.min(values.limit, config.pageSize) || config.pageSize;
     /* TODO: lastPage: boolean - get data for one row more than is page size, and test if retrived data has more data of page size (it is not lastPage) or less (it is lastPage)
         limit++;
-        lastPage = data.length > config.pageSize
+        lastPage = !(data.length > config.pageSize)
         data = data.slice(limit - 1)
     */
     /*
