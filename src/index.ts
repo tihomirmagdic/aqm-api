@@ -19,7 +19,7 @@ process.env.NODE_ENV = "development";
 import express = require("express");
 import * as bodyParser from "body-parser";
 //import { db } from "./db";
-const os = require("os");
+import os = require("os");
 
 const app = express();
 app.use(bodyParser.json());
