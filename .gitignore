@@ -2,6 +2,6 @@
 package-lock.json
 node_modules/
 *.log
-TypeScript/**/*.js
-TypeScript/**/*.map
+src/**/*.js
+src/**/*.map
 .env

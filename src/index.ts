@@ -18,7 +18,8 @@ process.env.NODE_ENV = "development";
 
 import express = require("express");
 import * as bodyParser from "body-parser";
-import { db } from "./db";
+//import { db } from "./db";
+var os = require("os");
 
 const app = express();
 app.use(bodyParser.json());
@@ -56,6 +57,9 @@ app.use((error: ResponseError, req: any, res: any, next: any) => {
   //res.status(400).send('Bad request')
 });
 
-app.listen(port, () => {
-  console.log("\nReady for GET and other requests on http://localhost:" + port);
+const server = app.listen(port, () => {
+  console.log(
+    //"\nReady for GET and other requests on http://localhost:" + port;
+    "\nReady for GET and other requests on http://" + os.hostname() + ":" + port
+  );
 });

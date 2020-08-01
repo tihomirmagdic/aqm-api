@@ -34,7 +34,7 @@ const initOptions = {
         obj.devices = new repos_1.DevicesRepository(obj, pgp);
         obj.data = new repos_1.DataRepository(obj, pgp);
         obj.users = new repos_1.UsersRepository(obj, pgp);
-    }
+    },
 };
 // Initializing the library:
 const pgp = pgPromise(initOptions);

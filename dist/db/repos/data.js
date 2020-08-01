@@ -14,17 +14,21 @@ const Joi = __importStar(require("@hapi/joi"));
 // device, pm10, pm2_5, so2, co, o3, pb, hc, voc, temp, humidity, pressure, gps, battery, measured, received, aqi
 // schemas
 exports.shTypeCreateData = Joi.string().required().valid("full", "fast");
-const shSensors = Joi.string().required().valid("pm10", "pm2_5", "so2", "co", "o3", "pb", "hc", "voc", "temp", "humidity", "pressure", "gps", "battery", "measured");
-const thDate = Joi.object().keys({
+const shSensors = Joi.string()
+    .required()
+    .valid("pm10", "pm2_5", "so2", "co", "o3", "pb", "hc", "voc", "temp", "humidity", "pressure", "gps", "battery", "measured");
+const thDate = Joi.object()
+    .keys({
     date: Joi.date(),
-    interval: Joi.string().isoDuration()
-}).xor("date", "interval");
+    interval: Joi.string().isoDuration(),
+})
+    .xor("date", "interval");
 const shTimeFrame = Joi.object().keys({
     from: thDate.required(),
-    to: thDate
+    to: thDate,
 });
 exports.shshTypeCreateData = Joi.object().keys({
-    type: exports.shTypeCreateData
+    type: exports.shTypeCreateData,
 });
 exports.shDataCreate = Joi.object().keys({
     //device: Joi.number().required(),
@@ -44,33 +48,36 @@ exports.shDataCreate = Joi.object().keys({
     measured: Joi.date().required(),
 });
 exports.shDataCreateHeader = Joi.object().keys({
-    apikey: Joi.string().required()
+    apikey: Joi.string().required(),
 });
 const shCircle = Joi.object().keys({
     center: Joi.array().items(regions_1.shNumber).length(2).required(),
-    radius: Joi.number().required()
+    radius: Joi.number().required(),
 });
-const shLocations = Joi.object().keys({
+const shLocations = Joi.object()
+    .keys({
     devices: Joi.array().items(Joi.number()),
     owner: Joi.boolean().allow(true),
     name: Joi.string(),
     polygon: regions_1.shPolygon,
-    circle: shCircle
-}).xor("devices", "owner", "name", "polygon", "circle");
+    circle: shCircle,
+})
+    .xor("devices", "owner", "name", "polygon", "circle");
 exports.shDataRetreive = Joi.object().keys({
     sensors: Joi.array().items(shSensors).required(),
     time: shTimeFrame.required(),
     locations: shLocations,
     order: Joi.array().items(Joi.string()),
-    limit: Joi.number()
+    limit: Joi.number(),
 });
 exports.shDataRetrievePage = Joi.object().keys({
-    page: Joi.number().required()
+    page: Joi.number().required(),
 });
 const sql = sqlProvider.data;
 class DataRepository {
     constructor(db, pgp) {
         this.existingCols = (values, columnSet) => {
+            // filter existing columns from columnset or create new ones on-the-fly
             const keys = Object.keys(values);
             return keys.map((key) => columnSet.columns.find((c) => c.name === key) ||
                 new this.pgp.helpers.Column({ name: key, skip: (c) => !c.exists }));
@@ -103,9 +110,17 @@ class DataRepository {
         //this.replaceAllFieldsRule(aFields, ["battery", "humidity"], '', ` || '%'`, []);
         this.replaceField(aFields, "gps", "array[st_x(gps), st_y(gps)] gps");
         const fields = `\n\t${aFields.join(", ")}\n`;
-        const from = values.time.from.date ? `'${values.time.from.date.toISOString()}'` : `(now() - '${values.time.from.interval}'::interval)`;
-        const to = (values.time.to && values.time.to.date) ? `'${values.time.to.date.toISOString()}'` : (values.time.to && values.time.to.interval ? `(now() - '${values.time.to.interval}'::interval)` : null);
-        const measured = to ? `measured between ${from} and ${to}\n` : `measured >= ${from}\n`;
+        const from = values.time.from.date
+            ? `'${values.time.from.date.toISOString()}'`
+            : `(now() - '${values.time.from.interval}'::interval)`;
+        const to = values.time.to && values.time.to.date
+            ? `'${values.time.to.date.toISOString()}'`
+            : values.time.to && values.time.to.interval
+                ? `(now() - '${values.time.to.interval}'::interval)`
+                : null;
+        const measured = to
+            ? `measured between ${from} and ${to}\n`
+            : `measured >= ${from}\n`;
         let locations;
         let addTables = "\n";
         if (values.locations.devices) {
@@ -123,7 +138,8 @@ class DataRepository {
             else if (values.locations.polygon) {
                 const polygon = values.locations.polygon;
                 // console.log("polygon:", polygon);
-                if ((polygon[0][0] !== polygon[polygon.length - 1][0]) && (polygon[0][1] !== polygon[polygon.length - 1][1])) {
+                if (polygon[0][0] !== polygon[polygon.length - 1][0] &&
+                    polygon[0][1] !== polygon[polygon.length - 1][1]) {
                     polygon.push(polygon[0]);
                 }
                 if (polygon.length < 4) {
@@ -131,7 +147,8 @@ class DataRepository {
                 }
                 // console.log("polygon:", polygon);
                 const sPolygon = "ST_MakePolygon(ST_MakeLine(array[" +
-                    polygon.map((pt) => `ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`)
+                    polygon
+                        .map((pt) => `ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`)
                         .join(", ") +
                     "]))";
                 // console.log("sPolygon:", sPolygon);
@@ -143,8 +160,18 @@ class DataRepository {
                 locations = `ST_DWithin(gps, ${circle}, ${values.locations.circle.radius})`;
             }
         }
-        const order = (values.order ? `\norder by ` + values.order.map((field) => field.substr(0, 1) === "-" ? field.substr(1) + " desc" : field).join(", ") : "") + "\n";
-        const limit = (Math.min(values.limit, config.pageSize) || config.pageSize);
+        const order = (values.order
+            ? `\norder by ` +
+                values.order
+                    .map((field) => field.substr(0, 1) === "-" ? field.substr(1) + " desc" : field)
+                    .join(", ")
+            : "") + "\n";
+        const limit = Math.min(values.limit, config.pageSize) || config.pageSize;
+        /* TODO: lastPage: boolean - get data for one row more than is page size, and test if retrived data has more data of page size (it is not lastPage) or less (it is lastPage)
+            limit++;
+            lastPage = !(data.length > config.pageSize)
+            data = data.slice(limit - 1)
+        */
         /*
         console.log("config:", config);
         console.log("page:", page);
@@ -156,7 +183,15 @@ class DataRepository {
         console.log("order:", order);
         console.log("limit:", limit);
         */
-        return this.db.any(sql.get, { fields, measured, addTables, locations, order, offset: config.pageSize * (page - 1), limit });
+        return this.db.any(sql.get, {
+            fields,
+            measured,
+            addTables,
+            locations,
+            order,
+            offset: config.pageSize * (page - 1),
+            limit,
+        });
     }
     add(type, apikey, values) {
         console.log("add api key: ", apikey);
@@ -168,9 +203,12 @@ class DataRepository {
             console.log("cols:", cols);
             const colValues = this.pgp.helpers.values(values, cols);
             console.log("colValues:", colValues);
-            const { dbcall, returning } = (type === "full") ?
-                { dbcall: this.db.one, returning: "returning pm10, pm2_5, so2, co, o3, pb, hc, voc, temp, humidity, pressure, array[st_x(gps), st_y(gps)] gps, battery, measured, received, aqi" } : // return full record
-                { dbcall: this.db.none, returning: "" }; // call SQL insert, and do not return any record
+            const { dbcall, returning } = type === "full"
+                ? {
+                    dbcall: this.db.one,
+                    returning: "returning pm10, pm2_5, so2, co, o3, pb, hc, voc, temp, humidity, pressure, array[st_x(gps), st_y(gps)] gps, battery, measured, received, aqi",
+                } // return full record
+                : { dbcall: this.db.none, returning: "" }; // call SQL insert, and do not return any record
             const dbResult = dbcall(sql.add, { values, colValues, returning });
             // check rules
             return dbResult;
@@ -184,7 +222,6 @@ class DataRepository {
             return device;
         });
     }
-    ;
     aqi(values) {
         return values.temp + 10;
     }
@@ -195,7 +232,7 @@ class DataRepository {
             const colGPS = new this.pgp.helpers.Column({
                 name: "gps",
                 mod: ":raw",
-                init: (params) => this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${params.value[0]}, ${params.value[1]}), 4326)`)
+                init: (params) => this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${params.value[0]}, ${params.value[1]}), 4326)`),
             });
             cs.insert = new helpers.ColumnSet(colGPS);
             DataRepository.cs = cs;

@@ -22,7 +22,7 @@ exports.shDevicesCreate = Joi.object().keys({
     fconfiguration: Joi.string().allow(null),
     apikey: Joi.string().required(),
     note: Joi.string(),
-    enabled: Joi.boolean()
+    enabled: Joi.boolean(),
 });
 exports.shDevicesValues = Joi.object().keys({
     type: Joi.string(),
@@ -33,7 +33,7 @@ exports.shDevicesValues = Joi.object().keys({
     fconfiguration: Joi.string().allow(null),
     apikey: Joi.string(),
     note: Joi.string(),
-    enabled: Joi.boolean()
+    enabled: Joi.boolean(),
 });
 exports.shDevicesUpdate = Joi.object().keys({
     ids: Joi.array().items(default_schemas_1.shID).required(),
@@ -58,7 +58,11 @@ class DevicesRepository {
     add(type, values) {
         const colValues = this.pgp.helpers.values(values);
         const dbcall = type === "fast" ? this.db.none : this.db.one;
-        const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
+        const returning = type === "full"
+            ? "returning *"
+            : type === "id"
+                ? "returning " + this.keys.join(", ")
+                : "";
         return dbcall(sql.add, { values, colValues, returning });
     }
     update(type, data) {
@@ -73,7 +77,9 @@ class DevicesRepository {
         }
     }
     delete(where) {
-        return this.db.result(sql.remove, { where }, (r) => ({ deleted: r.rowCount }));
+        return this.db.result(sql.remove, { where }, (r) => ({
+            deleted: r.rowCount,
+        }));
     }
 }
 exports.DevicesRepository = DevicesRepository;
