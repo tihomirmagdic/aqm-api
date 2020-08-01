@@ -56,7 +56,8 @@ export class DevicesRepository {
 
   public get() {
     console.log("before GET:", sql.getAll);
-    console.log("db:", this.db);
+    console.log("db.$cn:", this.db.$cn);
+    console.log("db.$config:", this.db.$config);
     return this.db.any(sql.getAll);
   }
 
