@@ -30,7 +30,7 @@ import { defineRoutes } from "./server/api";
 
 defineRoutes(app, config);
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.use((req, res, next) => {
   Promise.resolve()
