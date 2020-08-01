@@ -43,10 +43,12 @@ const sql = sqlProvider.devices;
 class DevicesRepository {
     constructor(db, pgp) {
         this.keys = ["id"];
+        console.log("Device constructor:");
         this.db = db;
         this.pgp = pgp;
     }
     get() {
+        console.log("before GET:", sql.getAll);
         return this.db.any(sql.getAll);
     }
     getByIDs(where) {

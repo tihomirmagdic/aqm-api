@@ -37,6 +37,7 @@ export class DeviceTypesRepository {
   private keys: string[] = ["id"];
 
   constructor(db: any, pgp: any) {
+    console.log("DeviceTypes constructor:");
     this.db = db;
     this.pgp = pgp;
   }

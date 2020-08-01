@@ -17,12 +17,12 @@ const default_schemas_1 = require("../../server/default-schemas");
 exports.shDeviceTypesCreate = Joi.object().keys({
     id: Joi.string().required(),
     name: Joi.string().required(),
-    version: Joi.string().required()
+    version: Joi.string().required(),
 });
 exports.shDeviceTypesValues = Joi.object().keys({
     id: Joi.string(),
     name: Joi.string(),
-    version: Joi.string()
+    version: Joi.string(),
 });
 exports.shDeviceTypesUpdate = Joi.object().keys({
     ids: Joi.array().items(default_schemas_1.shText).required(),
@@ -32,6 +32,7 @@ const sql = sqlProvider.devicetypes;
 class DeviceTypesRepository {
     constructor(db, pgp) {
         this.keys = ["id"];
+        console.log("DeviceTypes constructor:");
         this.db = db;
         this.pgp = pgp;
     }
@@ -50,27 +51,33 @@ class DeviceTypesRepository {
         }
         const colValues = this.pgp.helpers.values(values);
         console.log("colValues:", colValues);
-        const { dbcall, returning } = (type === "id") ?
-            { dbcall: this.db.one, returning: "returning " + this.keys.join(", ") } : // return one record with id column
-            { dbcall: this.db.none, returning: "" }; // call SQL insert, and do not return any record
+        const { dbcall, returning } = type === "id"
+            ? {
+                dbcall: this.db.one,
+                returning: "returning " + this.keys.join(", "),
+            } // return one record with id column
+            : { dbcall: this.db.none, returning: "" }; // call SQL insert, and do not return any record
         return dbcall(sql.add, { values, colValues, returning });
     }
     add(type, values) {
         const colValues = this.pgp.helpers.values(values);
         const dbcall = type === "fast" ? this.db.none : this.db.one;
-        const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
+        const returning = type === "full"
+            ? "returning *"
+            : type === "id"
+                ? "returning " + this.keys.join(", ")
+                : "";
         return dbcall(sql.add, { values, colValues, returning });
     }
     update0(type, data) {
         if (type === "full") {
-            return this.db.task("update device types", (t) => this.update("fast", data).
-                then(() => {
+            return this.db.task("update device types", (t) => this.update("fast", data).then(() => {
                 handler_1.checkModifiedIDs(data, this.keys);
                 /*
-                if (data.values.id) {
-                  data.ids.map((item: any) => item.id = data.values.hasOwnProperty("id") ? data.values.id : item.id);
-                }
-                */
+                  if (data.values.id) {
+                    data.ids.map((item: any) => item.id = data.values.hasOwnProperty("id") ? data.values.id : item.id);
+                  }
+                  */
                 // console.log("before find:", data.ids);
                 return this.getByIDs(data.ids);
             }));
@@ -78,7 +85,9 @@ class DeviceTypesRepository {
         else {
             const where = data.ids;
             const set = this.pgp.helpers.sets(data.values);
-            return this.db.result(sql.update, { set, where }, (r) => ({ updated: r.rowCount }));
+            return this.db.result(sql.update, { set, where }, (r) => ({
+                updated: r.rowCount,
+            }));
         }
     }
     update(type, data) {
@@ -93,7 +102,9 @@ class DeviceTypesRepository {
         }
     }
     delete(where) {
-        return this.db.result(sql.remove, { where }, (r) => ({ deleted: r.rowCount }));
+        return this.db.result(sql.remove, { where }, (r) => ({
+            deleted: r.rowCount,
+        }));
     }
 }
 exports.DeviceTypesRepository = DeviceTypesRepository;
