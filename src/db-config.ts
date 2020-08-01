@@ -8,4 +8,7 @@ export const dbConfig = {
   //port: 5432,
   //database: "postgres",
   //user: "postgres",
+  ssl: {
+    rejectUnauthorized: false,
+  },
 };
