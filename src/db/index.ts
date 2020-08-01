@@ -1,6 +1,5 @@
 import * as promise from "bluebird"; // best promise library today
-import * as dbConfig from "../db-config.json"; // db connection details
-// import * as pgPromise from 'pg-promise'; // pg-promise core library
+import { dbConfig } from "../db-config"; // db connection details
 import pgPromise = require("pg-promise");
 import { Diagnostics } from "./diagnostics"; // optional diagnostics
 import { IInitOptions, IDatabase, IMain } from "pg-promise";

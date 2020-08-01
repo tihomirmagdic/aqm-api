@@ -25,15 +25,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 process.env.NODE_ENV = "development";
 const express = require("express");
 const bodyParser = __importStar(require("body-parser"));
-//import { db } from "./db";
-var os = require("os");
+const os = require("os");
 const app = express();
 app.use(bodyParser.json());
 // Config
 const config_1 = require("./server/config");
 const api_1 = require("./server/api");
 api_1.defineRoutes(app, config_1.config);
-const port = 5000;
+const port = process.env.PORT || 5000;
 app.use((req, res, next) => {
     Promise.resolve()
         .then(() => {

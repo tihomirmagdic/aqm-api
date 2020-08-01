@@ -9,7 +9,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("..");
 const sqlProvider = require("../sql");
-const dbConfig = __importStar(require("../../db-config.json")); // db connection details
+const dbConfig = __importStar(require("../../db-config")); // db connection details
 const sql = sqlProvider.cache;
 class CacheRepository {
     constructor(db, pgp) {
@@ -23,7 +23,7 @@ class CacheRepository {
         console.log("loading api keys...");
         const db = __1.dbPool.get(dbConfig);
         const apikeys = await db.any(sql.getApiKeys);
-        apikeys.forEach(ak => this.data["apikey-" + ak.apikey] = ak.id);
+        apikeys.forEach((ak) => (this.data["apikey-" + ak.apikey] = ak.id));
         console.log("apikey data:", this.data);
     }
     get(key) {
@@ -34,10 +34,12 @@ class CacheRepository {
         return this.data[key];
     }
     async apiKey(key) {
-        return (this.loaded ? this.data["apikey-" + key] : await this.load().then(() => {
-            console.log("return: ", this.data["apikey-" + key]);
-            return this.data["apikey-" + key];
-        }));
+        return this.loaded
+            ? this.data["apikey-" + key]
+            : await this.load().then(() => {
+                console.log("return: ", this.data["apikey-" + key]);
+                return this.data["apikey-" + key];
+            });
     }
     exists(key) {
         console.log("exists key:", key);

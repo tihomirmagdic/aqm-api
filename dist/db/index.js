@@ -8,8 +8,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const promise = __importStar(require("bluebird")); // best promise library today
-const dbConfig = __importStar(require("../db-config.json")); // db connection details
-// import * as pgPromise from 'pg-promise'; // pg-promise core library
+const db_config_1 = require("../db-config"); // db connection details
 const pgPromise = require("pg-promise");
 const diagnostics_1 = require("./diagnostics"); // optional diagnostics
 const repos_1 = require("../db/repos");
@@ -61,7 +60,7 @@ class DBPool {
             return this.pool.delete(dbKey.key);
         };
         this.key = (ct) => {
-            const config = Object.assign(Object.assign({}, dbConfig), ct);
+            const config = Object.assign(Object.assign({}, db_config_1.dbConfig), ct);
             const { host, port, database, user } = config;
             return { config, key: JSON.stringify({ host, port, database, user }) };
         };
@@ -69,7 +68,7 @@ class DBPool {
 }
 exports.dbPool = new DBPool();
 // Creating the database instance with extensions:
-const db = pgp(dbConfig);
+const db = pgp(db_config_1.dbConfig);
 exports.db = db;
 // Initializing optional diagnostics:
 diagnostics_1.Diagnostics.init(initOptions);
