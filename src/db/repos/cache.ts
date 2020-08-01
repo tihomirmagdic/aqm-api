@@ -35,6 +35,7 @@ export class CacheRepository {
   }
 
   public async apiKey(key: string) {
+    console.log("apiKey:", key);
     return this.loaded
       ? this.data["apikey-" + key]
       : await this.load().then(() => {
@@ -53,10 +54,12 @@ export class CacheRepository {
   }
 
   public invalidate() {
+    console.log("invalidate");
     this.loaded = false;
   }
 
   private async load() {
+    console.log("loading data...");
     this.data = {};
     await this.loadApiKeys();
     this.loaded = true;
