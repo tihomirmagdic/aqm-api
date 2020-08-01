@@ -54,6 +54,7 @@ export class DevicesRepository {
   }
 
   public get() {
+    console.log("before GET");
     return this.db.any(sql.getAll);
   }
 
