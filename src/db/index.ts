@@ -90,7 +90,8 @@ class DBPool {
 export const dbPool = new DBPool();
 
 // Creating the database instance with extensions:
-const db: ExtendedProtocol = pgp(dbConfig.connectionString || dbConfig);
+console.log("connection string:", process.env.DATABASE_URL);
+const db: ExtendedProtocol = pgp(process.env.DATABASE_URL || dbConfig);
 
 // Initializing optional diagnostics:
 Diagnostics.init(initOptions);
