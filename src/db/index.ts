@@ -91,7 +91,7 @@ export const dbPool = new DBPool();
 
 // Creating the database instance with extensions:
 console.log("dbConfig:", dbConfig);
-const db: ExtendedProtocol = pgp(process.env.DATABASE_URL!);
+const db: ExtendedProtocol = pgp(dbConfig);
 
 // Initializing optional diagnostics:
 Diagnostics.init(initOptions);

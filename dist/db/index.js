@@ -68,6 +68,7 @@ class DBPool {
 }
 exports.dbPool = new DBPool();
 // Creating the database instance with extensions:
+console.log("dbConfig:", db_config_1.dbConfig);
 const db = pgp(db_config_1.dbConfig);
 exports.db = db;
 // Initializing optional diagnostics:

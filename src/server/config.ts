@@ -1,13 +1,15 @@
 export const config = {
   AUTH0_DOMAIN: "https://indigo-services.eu.auth0.com/",
   AUTH0_API_AUDIENCE: "http://localhost:8083/api/",
-  MONGO_URI: process.env.MONGO_URI || "mongodb://[USER]:[PASSWORD]@[DS######].mlab.com:[PORT]/[DB_NAME]",
+  MONGO_URI:
+    process.env.MONGO_URI ||
+    "mongodb://[USER]:[PASSWORD]@[DS######].mlab.com:[PORT]/[DB_NAME]",
   joi: {},
-  upload: {}
+  upload: {},
 };
 
 // Database connection parameters:
-export const dbConfig = {
+export const adbConfig = {
   host: "localhost",
   port: 5432,
   database: "postgres",
@@ -23,5 +25,5 @@ export const dbConfig = {
   // fallback_application_name: undefined,
   parseInputDatesAsUTC: false,
   statement_timeout: false, // max milliseconds any query using this connection will execute for before timing out in error. false=unlimited
-  query_timeout: false // max milliseconds to wait for query to complete (client side)
+  query_timeout: false, // max milliseconds to wait for query to complete (client side)
 };
