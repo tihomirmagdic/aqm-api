@@ -51,6 +51,13 @@ export type DB = IDatabase<IExtensions> & IExtensions;
 // Initializing the library:
 const pgp: IMain = pgPromise(initOptions);
 
+// Creating the database instance with extensions:
+console.log("dbConfig:", dbConfig);
+const db: ExtendedProtocol = pgp(dbConfig);
+
+// Initializing optional diagnostics:
+Diagnostics.init(initOptions);
+
 interface DBKey {
   config: any;
   key: string;
@@ -69,7 +76,8 @@ class DBPool {
       ldb = pgp(dbKey.config) as DB;
       this.pool.set(dbKey.key, ldb);
     }
-    return ldb;
+    return db;
+    //return ldb;
   };
 
   public remove = (ct: any): boolean => {
@@ -89,13 +97,6 @@ class DBPool {
 }
 
 export const dbPool = new DBPool();
-
-// Creating the database instance with extensions:
-console.log("dbConfig:", dbConfig);
-const db: ExtendedProtocol = pgp(dbConfig);
-
-// Initializing optional diagnostics:
-Diagnostics.init(initOptions);
 
 // Alternatively, you can get access to pgp via db.$config.pgp
 // See: https://vitaly-t.github.io/pg-promise/Database.html#$config
