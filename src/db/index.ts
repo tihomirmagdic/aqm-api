@@ -67,7 +67,7 @@ class DBPool {
   private pool = new Map();
 
   public get = (ct: any): DB => {
-    console.log("pool:", this.pool);
+    //console.log("pool:", this.pool);
     //return db;
 
     const dbKey = this.key(ct);

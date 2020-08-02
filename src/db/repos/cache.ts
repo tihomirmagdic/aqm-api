@@ -13,7 +13,7 @@ export class CacheRepository {
   public data: any = {};
 
   constructor(db: any, pgp: any) {
-    console.log("Cache constructor:");
+    //console.log("Cache constructor:");
     this.db = db;
     this.pgp = pgp;
   }
