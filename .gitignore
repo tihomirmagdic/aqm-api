@@ -4,4 +4,5 @@ node_modules/
 *.log
 src/**/*.js
 src/**/*.map
+dist/
 .env
