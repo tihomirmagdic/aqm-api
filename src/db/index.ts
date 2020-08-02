@@ -68,6 +68,8 @@ class DBPool {
 
   public get = (ct: any): DB => {
     console.log("pool:", this.pool);
+    return db;
+    /*
     const dbKey = this.key(ct);
     let ldb: DB = this.pool.get(dbKey.key) as DB;
 
@@ -76,8 +78,8 @@ class DBPool {
       ldb = pgp(dbKey.config) as DB;
       this.pool.set(dbKey.key, ldb);
     }
-    return db;
-    //return ldb;
+		return ldb;
+		*/
   };
 
   public remove = (ct: any): boolean => {

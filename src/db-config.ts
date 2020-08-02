@@ -1,5 +1,5 @@
 export const dbConfig = {
-  //connectionString: process.env.DATABASE_URL, // ||
+  connectionString: process.env.DATABASE_URL, // ||
   //connectionString:
   //process.env.DATABASE_URL +
   //"?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",
