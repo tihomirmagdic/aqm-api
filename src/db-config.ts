@@ -13,4 +13,7 @@ export const dbConfig = {
   //user: "postgres",
   user: "nshsodqdoimnqo",
   password: "9ba94ac902fa70628a04020137a5b91b9d9172b751b3b40e65daaf4864d4ca46",
+  ssl: false,
+  statement_timeout: 2000, // max milliseconds any query using this connection will execute for before timing out in error. false=unlimited
+  query_timeout: 2000, // max milliseconds to wait for query to complete (client side)
 };
