@@ -23,8 +23,11 @@
     "email": "tihomir.magdic@gmail.com"
   },
   "license": "MIT",
-  "engines": {
+  "xengines": {
     "node": ">=8.0.0"
+  },
+  "engines": {
+    "node": "12.8.0"
   },
   "scripts": {
     "clean": "rimraf dist/*",
