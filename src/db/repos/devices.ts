@@ -55,10 +55,13 @@ export class DevicesRepository {
   }
 
   public get() {
+    return { a: "b" };
+    /*
     console.log("before GET:", sql.getAll);
     console.log("db.$cn:", this.db.$cn);
     console.log("db.$config:", this.db.$config);
     return this.db.any(sql.getAll);
+    */
   }
 
   public getByIDs(where: any) {
