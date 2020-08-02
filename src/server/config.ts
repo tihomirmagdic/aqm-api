@@ -9,7 +9,7 @@ export const config = {
 };
 
 // Database connection parameters:
-export const adbConfig = {
+const adbConfig = {
   host: "localhost",
   port: 5432,
   database: "postgres",

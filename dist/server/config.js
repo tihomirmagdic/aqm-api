@@ -9,7 +9,7 @@ exports.config = {
     upload: {},
 };
 // Database connection parameters:
-exports.adbConfig = {
+const adbConfig = {
     host: "localhost",
     port: 5432,
     database: "postgres",

@@ -1,1 +1,1 @@
-{"version":3,"file":"db-config.js","sourceRoot":"","sources":["../src/db-config.ts"],"names":[],"mappings":";;AAAa,QAAA,QAAQ,GAAG;IACtB,gBAAgB;IACd,6BAA6B;IAC7B,4BAA4B;IAC5B,qEAAqE;IACrE,qNAAqN;CAKxN,CAAC"}
+{"version":3,"file":"db-config.js","sourceRoot":"","sources":["../src/db-config.ts"],"names":[],"mappings":";;AAAa,QAAA,QAAQ,GAAG;IACtB,gBAAgB,EAAE,OAAO,CAAC,GAAG,CAAC,YAAY;IAC1C,4BAA4B;IAC5B,qEAAqE;IACrE,wNAAwN;IACxN,4JAA4J;IAC5J,oBAAoB;IACpB,aAAa;IACb,uBAAuB;IACvB,mBAAmB;IACnB,IAAI,EAAE,gBAAgB;IACtB,QAAQ,EAAE,kEAAkE;CAC7E,CAAC"}

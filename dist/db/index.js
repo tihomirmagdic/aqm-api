@@ -45,7 +45,7 @@ class DBPool {
             const dbKey = this.key(ct);
             let ldb = this.pool.get(dbKey.key);
             if (!ldb) {
-                // const pgp: IMain = pgPromise(initOptions);
+                //const pgp: IMain = pgPromise(initOptions);
                 ldb = pgp(dbKey.config);
                 this.pool.set(dbKey.key, ldb);
             }
