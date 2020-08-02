@@ -52,7 +52,7 @@ export type DB = IDatabase<IExtensions> & IExtensions;
 const pgp: IMain = pgPromise(initOptions);
 
 // Creating the database instance with extensions:
-console.log("dbConfig:", dbConfig);
+//console.log("dbConfig:", dbConfig);
 const db: ExtendedProtocol = pgp(dbConfig);
 
 // Initializing optional diagnostics:
@@ -68,8 +68,8 @@ class DBPool {
 
   public get = (ct: any): DB => {
     //console.log("pool:", this.pool);
-    //return db;
-
+    return db;
+    /*
     const dbKey = this.key(ct);
     let ldb: DB = this.pool.get(dbKey.key) as DB;
 
@@ -78,7 +78,8 @@ class DBPool {
       ldb = pgp(dbKey.config) as DB;
       this.pool.set(dbKey.key, ldb);
     }
-    return ldb;
+		return ldb;
+		*/
   };
 
   public remove = (ct: any): boolean => {
