@@ -21,7 +21,7 @@ export class UserNotLoggedInError extends Error {
 export const getDBContext = (req?: Request) => {
   // return { user: "testuser1", password: "pg" };
   //return { user: "postgres", password: "pg" };
-  return {};
+  return { user: "nshsodqdoimnqo" };
 };
 
 interface Validation {

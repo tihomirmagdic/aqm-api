@@ -18,9 +18,14 @@ exports.UserNotLoggedInError = UserNotLoggedInError;
 // fetcher for DBPool
 exports.getDBContext = (req) => {
     // return { user: "testuser1", password: "pg" };
-    return { user: "postgres", password: "pg" };
+    //return { user: "postgres", password: "pg" };
+    return { user: "nshsodqdoimnqo" };
 };
-exports.valid = (params, schema, options) => ({ params, schema, options });
+exports.valid = (params, schema, options) => ({
+    params,
+    schema,
+    options,
+});
 const check = (params, schema, options) => schema.validate(params, options);
 exports.multiValidator = (c) => {
     const value = [];
@@ -34,12 +39,13 @@ exports.multiValidator = (c) => {
 };
 const defaultValidator = (params, sh) => {
     const result = exports.multiValidator([exports.valid(params, sh)]);
-    console.log('defaultValidator:', result);
+    console.log("defaultValidator:", result);
     return result;
 };
 exports.preparePolygonValues = (values) => {
     if (values) {
-        if ((values[0][0] !== values[values.length - 1][0]) && (values[0][1] !== values[values.length - 1][1])) {
+        if (values[0][0] !== values[values.length - 1][0] &&
+            values[0][1] !== values[values.length - 1][1]) {
             values.push(values[0]);
         }
         if (values.length < 4) {
@@ -51,7 +57,9 @@ exports.preparePolygonValues = (values) => {
 exports.checkModifiedId = (data, key) => {
     if (data.values[key]) {
         data.ids.map((item) => {
-            item[key] = data.values.hasOwnProperty(key) ? data.values[key] : item[key];
+            item[key] = data.values.hasOwnProperty(key)
+                ? data.values[key]
+                : item[key];
         });
     }
 };
@@ -79,7 +87,9 @@ class Api {
         // generic GET handler with validation
         this.vGET = (url, validator, handler) => {
             return this.GET(url, (req) => {
-                const { error, value } = validator ? validator(req) : { error: null, value: null };
+                const { error, value } = validator
+                    ? validator(req)
+                    : { error: null, value: null };
                 if (error) {
                     throw new InvalidParamsError("invalid params: " + error);
                 }
@@ -108,7 +118,9 @@ class Api {
         // generic POST handler with validation
         this.vPOST = (url, validator, handler) => {
             return this.POST(url, async (req) => {
-                const { error, value } = validator ? await validator(req) : { error: null, value: null };
+                const { error, value } = validator
+                    ? await validator(req)
+                    : { error: null, value: null };
                 if (error) {
                     throw new InvalidParamsError("invalid params: " + error);
                 }
@@ -137,7 +149,9 @@ class Api {
         // generic GET handler with validation
         this.vPUT = (url, validator, handler) => {
             return this.PUT(url, async (req) => {
-                const { error, value } = validator ? await validator(req) : { error: null, value: null };
+                const { error, value } = validator
+                    ? await validator(req)
+                    : { error: null, value: null };
                 if (error) {
                     throw new InvalidParamsError("invalid params: " + error);
                 }
@@ -168,7 +182,9 @@ class Api {
         // generic DELETE handler with validation
         this.vDELETE = (url, validator, handler) => {
             return this.DELETE(url, async (req) => {
-                const { error, value } = validator ? await validator(req) : { error: null, value: null };
+                const { error, value } = validator
+                    ? await validator(req)
+                    : { error: null, value: null };
                 if (error) {
                     throw new InvalidParamsError("invalid params: " + error);
                 }
@@ -187,5 +203,4 @@ class Api {
     }
 }
 exports.Api = Api;
-;
 //# sourceMappingURL=handler.js.map
