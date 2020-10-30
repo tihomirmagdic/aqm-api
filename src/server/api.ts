@@ -1,5 +1,5 @@
-import { Request } from "express";
-import { DB } from "../db";
+import { Request, Response } from "express";
+import { DB, dbPool } from "../db";
 import { multiValidator, valid, Api } from "./handler";
 
 import { shID, shDefaultIDs, shDefaultIDsAsText, shText, shDefaultTypeCreate, shDefaultTypeUpdate } from "./default-schemas";
@@ -10,9 +10,16 @@ import { shConfigurationItemsIds, shConfigurationItemsCreate, shConfigurationIte
 import { shRegionTypesCreate, shRegionTypesUpdate } from "../db/repos/regiontypes";
 import { shRegionsCreate, shRegionsUpdate } from "../db/repos/regions";
 import { shOwnersCreate, shOwnersUpdate } from "../db/repos/owners";
+import { shAuthTypeCreate, shAuthCreateLocal } from "../db/repos/auth";
 import { shFirmwaresCreate, shFirmwaresUpdate } from "../db/repos/firmwares";
 import { shDevicesCreate, shDevicesUpdate } from "../db/repos/devices";
 import { shDataRetrievePage, shshTypeCreateData, shDataCreateHeader, shDataCreate, shDataRetreive } from "../db/repos/data";
+
+//import { passport } from "../db/repos/passport-setup";
+const passport = require('passport');
+import { setup } from "../db/repos/passport-setup";
+
+import { nextTick } from "process";
 
 export const defineRoutes = (app: any, config: any) => {
 	const routes: any = new Api(app, config);
@@ -189,6 +196,88 @@ export const defineRoutes = (app: any, config: any) => {
 	routes.dbDELETE("/owners",
 		(req: Request) => multiValidator([valid(req.body, shDefaultIDs)]),
 		(db: DB, values: any) => db.owners.delete(values[0].ids));
+
+	//////////////////////////////////////////////
+	// Auth REST API
+	//////////////////////////////////////////////
+
+	setup(app, passport);
+
+	const ensureAuthenticated = (req: any, res: Response, next: any) => {
+		if (req.isAuthenticated()) { return next(); }
+		res.redirect('/login')
+	}
+
+	app.get("/api/v1/auth/test", (req: any, res: Response) => {
+		if (req.user) {
+			res.send("user " + req.user.email + " logged in");
+		} else {
+			res.send("user not logged in");
+		}
+	});
+
+	// login - type is google, facebook
+	// routes.dbPOST(["/auth/:type", "/login/:type"]
+	app.get("/aapi/v1/auth/google", (req: Request, res: Response, next: any) => {
+		//res.setHeader("Access-Control-Allow-Origin", "*");
+		next();
+	}, passport.authenticate('google', { scope: ['email', 'profile'] }));
+	
+	app.get("/api/v1/auth/google", passport.authenticate('google', { scope: ['email', 'profile'] }), (req: Request, res: Response) => {
+		console.log("google auth");
+		res.send("google auth");
+	});
+
+	app.get("/api/v1/auth/facebook", passport.authenticate('facebook', { scope: ['email'] }), (req: Request, res: Response) => {
+		console.log("facebook auth");
+		res.send("facebook auth");
+	});
+
+	const signToken = (user: any) => {
+		return user;
+	};
+	
+	app.post("/api/v1/auth/local", passport.authenticate('local'), (req: any, res: Response) => {
+		console.log("local auth with user:", req.user);
+		/*
+		const token = signToken(req.user);
+    res.cookie('access_token', token, {
+      httpOnly: true
+		});
+		*/
+		res.status(200).json({ success: true });
+	});
+	
+	app.get("/api/v1/auth/google/redirect", passport.authenticate('google'), (req: any, res: Response) => {
+		//res.send("google auth redirected");
+		res.redirect("http://localhost:4200/auth");
+		//res.status(200).json(req.user);
+	});
+	
+	app.get("/api/v1/auth/facebook/redirect", passport.authenticate('facebook'), (req: any, res: Response) => {
+		//res.send("facebook auth redirected");
+		res.redirect("http://localhost:4200/auth");
+		//res.status(200).json(req.user);
+	});
+	
+	app.delete("/api/v1/auth", (req: any, res: Response) => {
+		console.log("before logout");
+		if (req.logout) {
+			console.log("user logged out");
+			req.logout();
+			//res.clearCookie('access_token');
+		}
+		res.send("after logout");
+	});
+	/*
+	routes.dbPOST("/auth",
+		(req: Request) => multiValidator([valid(req.body, shAuthCreateLocal)]),
+		(db: DB, values: any[]) => db.auth.create(values[0]));
+	*/
+	// logout
+	routes.dbDELETE("/auth",
+		null,
+		(db: DB, values: any) => db.auth.delete());
 
 	//////////////////////////////////////////////
 	// Firmwares REST API

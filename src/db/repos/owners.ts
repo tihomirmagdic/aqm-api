@@ -9,19 +9,21 @@ import * as Joi from "@hapi/joi";
 
 import { shID } from "../../server/default-schemas";
 
-// id, email, name, created, note
+// id, email, name, created, password, admin, enabled
 
 // schemas
 export const shOwnersCreate = Joi.object().keys({
   email: Joi.string().email().required(),
   name: Joi.string().required(),
-  note: Joi.string()
+  password: Joi.string().required(),
+  admin: Joi.boolean().default(false),
+  enabled: Joi.boolean().default(true)
 });
 
 export const shOwnersValues = Joi.object().keys({
   email: Joi.string().email(),
   name: Joi.string(),
-  note: Joi.string()
+  password: Joi.string()
 });
 
 export const shOwnersUpdate = Joi.object().keys({

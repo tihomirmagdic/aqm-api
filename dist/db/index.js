@@ -29,6 +29,7 @@ const initOptions = {
         obj.regiontypes = new repos_1.RegionTypesRepository(obj, pgp);
         obj.regions = new repos_1.RegionsRepository(obj, pgp);
         obj.owners = new repos_1.OwnersRepository(obj, pgp);
+        obj.auth = new repos_1.AuthRepository(obj, pgp);
         obj.firmwares = new repos_1.FirmwaresRepository(obj, pgp);
         obj.devices = new repos_1.DevicesRepository(obj, pgp);
         obj.data = new repos_1.DataRepository(obj, pgp);
@@ -38,18 +39,29 @@ const initOptions = {
 // Initializing the library:
 const pgp = pgPromise(initOptions);
 exports.pgp = pgp;
+// Creating the database instance with extensions:
+//console.log("dbConfig:", dbConfig);
+const db = pgp(db_config_1.dbConfig);
+exports.db = db;
+// Initializing optional diagnostics:
+diagnostics_1.Diagnostics.init(initOptions);
 class DBPool {
     constructor() {
         this.pool = new Map();
         this.get = (ct) => {
+            //console.log("pool:", this.pool);
+            return db;
+            /*
             const dbKey = this.key(ct);
-            let ldb = this.pool.get(dbKey.key);
+            let ldb: DB = this.pool.get(dbKey.key) as DB;
+        
             if (!ldb) {
-                //const pgp: IMain = pgPromise(initOptions);
-                ldb = pgp(dbKey.config);
-                this.pool.set(dbKey.key, ldb);
+              //const pgp: IMain = pgPromise(initOptions);
+              ldb = pgp(dbKey.config) as DB;
+              this.pool.set(dbKey.key, ldb);
             }
-            return ldb;
+                return ldb;
+                */
         };
         this.remove = (ct) => {
             const dbKey = this.key(ct);
@@ -60,17 +72,12 @@ class DBPool {
             return this.pool.delete(dbKey.key);
         };
         this.key = (ct) => {
-            const config = Object.assign(Object.assign({}, db_config_1.dbConfig), ct);
+            // const config = { ...dbConfig, ...ct };
+            const config = Object.assign({}, db_config_1.dbConfig);
             const { host, port, database, user } = config;
             return { config, key: JSON.stringify({ host, port, database, user }) };
         };
     }
 }
 exports.dbPool = new DBPool();
-// Creating the database instance with extensions:
-console.log("dbConfig:", db_config_1.dbConfig);
-const db = pgp(db_config_1.dbConfig);
-exports.db = db;
-// Initializing optional diagnostics:
-diagnostics_1.Diagnostics.init(initOptions);
 //# sourceMappingURL=index.js.map

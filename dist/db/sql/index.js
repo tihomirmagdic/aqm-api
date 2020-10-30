@@ -58,6 +58,10 @@ exports.owners = {
     update: sql('owners/update.sql'),
     remove: sql('owners/remove.sql'),
 };
+exports.auth = {
+    checkEmailPassword: sql('auth/check-email-password.sql'),
+    checkEmail: sql('auth/check-email.sql'),
+};
 exports.firmwares = {
     getAll: sql('firmwares/get-all.sql'),
     getByIDs: sql('firmwares/get-by-ids.sql'),

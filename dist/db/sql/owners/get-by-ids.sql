@@ -1,4 +1,7 @@
-select * from airq.owners
+select 
+  id, email, name, admin, enabled, created
+from
+  airq.owners
 where
   (id) in
     (

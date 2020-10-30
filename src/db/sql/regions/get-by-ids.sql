@@ -1,5 +1,5 @@
 select 
-	id, type, name, gtype, ST_AsText(area) area
+	id, type, name, gtype, ST_AsGeoJSON(coordinates)::json->>'coordinates' coordinates
 from 
 	airq.regions
 where

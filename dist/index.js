@@ -26,7 +26,28 @@ process.env.NODE_ENV = "development";
 const express = require("express");
 const bodyParser = __importStar(require("body-parser"));
 const os = require("os");
+const cors = require("cors");
 const app = express();
+app.use(cors({
+    origin: "*",
+    credentials: true
+}));
+/*
+const options = {
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'X-Access-Token',
+  ],
+  credentials: true,
+  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+  origin: '*',
+  preflightContinue: false,
+};
+app.use(cors(options));
+*/
 app.use(bodyParser.json());
 // Config
 const config_1 = require("./server/config");

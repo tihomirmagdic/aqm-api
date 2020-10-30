@@ -72,20 +72,35 @@ class Api {
         this.getUrl = (endpoint) => {
             return this.URL + endpoint;
         };
+        this.defaultResponse = (req, res, responseData) => {
+            return res.json(responseData);
+        };
         // Generic GET handler
-        this.GET = (url, handler) => {
+        this.GET = (url, handler, responser) => {
             this.app.get(this.getUrl(url), async (req, res) => {
+                //res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+                //res.setHeader("Access-Control-Allow-Origin", "*");
+                let responseData = {};
                 try {
                     const data = await handler(req);
-                    return res.json({ data, success: true });
+                    responseData = { data, success: true };
                 }
                 catch (error) {
-                    return res.json({ error: error.message || error, success: false });
+                    responseData = { error: error.message || error, success: false };
                 }
+                return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
+                /*
+                try {
+                  const data = await handler(req);
+                  return res.json({ data, success: true });
+                } catch (error) {
+                  return res.json({ error: error.message || error, success: false });
+                }
+                */
             });
         };
         // generic GET handler with validation
-        this.vGET = (url, validator, handler) => {
+        this.vGET = (url, validator, handler, responser) => {
             return this.GET(url, (req) => {
                 const { error, value } = validator
                     ? validator(req)
@@ -94,29 +109,39 @@ class Api {
                     throw new InvalidParamsError("invalid params: " + error);
                 }
                 return handler(req, value);
-            });
+            }, responser);
         };
         // generic GET handler with validation and DB
-        this.dbGET = (url, validator, handler) => {
+        this.dbGET = (url, validator, handler, responser) => {
             return this.vGET(url, validator, (req, value) => {
                 const db = db_1.dbPool.get(exports.getDBContext(req));
                 return handler(db, value, req);
-            });
+            }, responser);
         };
         // Generic POST handler
-        this.POST = (url, handler) => {
+        this.POST = (url, handler, responser) => {
             this.app.post(this.getUrl(url), async (req, res) => {
+                let responseData = {};
                 try {
                     const data = await handler(req);
-                    return res.json({ data, success: true });
+                    responseData = { data, success: true };
                 }
                 catch (error) {
-                    return res.json({ error: error.message || error, success: false });
+                    responseData = { error: error.message || error, success: false };
                 }
+                return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
+                /*
+                try {
+                  const data = await handler(req);
+                  return res.json({ data, success: true });
+                } catch (error) {
+                  return res.json({ error: error.message || error, success: false });
+                }
+                */
             });
         };
         // generic POST handler with validation
-        this.vPOST = (url, validator, handler) => {
+        this.vPOST = (url, validator, handler, responser) => {
             return this.POST(url, async (req) => {
                 const { error, value } = validator
                     ? await validator(req)
@@ -125,29 +150,39 @@ class Api {
                     throw new InvalidParamsError("invalid params: " + error);
                 }
                 return handler(req, value);
-            });
+            }, responser);
         };
         // generic POST handler with validation and DB
-        this.dbPOST = (url, validator, handler) => {
+        this.dbPOST = (url, validator, handler, responser) => {
             return this.vPOST(url, validator, (req, value) => {
                 const db = db_1.dbPool.get(exports.getDBContext(req));
                 return handler(db, value, req);
-            });
+            }, responser);
         };
         // Generic PUT handler
-        this.PUT = (url, handler) => {
+        this.PUT = (url, handler, responser) => {
             this.app.put(this.getUrl(url), async (req, res) => {
+                let responseData = {};
                 try {
                     const data = await handler(req);
-                    return res.json({ data, success: true });
+                    responseData = { data, success: true };
                 }
                 catch (error) {
-                    return res.json({ error: error.message || error, success: false });
+                    responseData = { error: error.message || error, success: false };
                 }
+                return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
+                /*
+                try {
+                  const data = await handler(req);
+                  return res.json({ data, success: true });
+                } catch (error) {
+                  return res.json({ error: error.message || error, success: false });
+                }
+                */
             });
         };
         // generic GET handler with validation
-        this.vPUT = (url, validator, handler) => {
+        this.vPUT = (url, validator, handler, responser) => {
             return this.PUT(url, async (req) => {
                 const { error, value } = validator
                     ? await validator(req)
@@ -158,29 +193,39 @@ class Api {
                 // console.log("validated value:", JSON.stringify(value));
                 // console.log("validated error:", error);
                 return handler(req, value);
-            });
+            }, responser);
         };
         // generic GET handler with validation and DB
-        this.dbPUT = (url, validator, handler) => {
+        this.dbPUT = (url, validator, handler, responser) => {
             return this.vPUT(url, validator, (req, value) => {
                 const db = db_1.dbPool.get(exports.getDBContext(req));
                 return handler(db, value);
-            });
+            }, responser);
         };
         // Generic DELETE handler
-        this.DELETE = (url, handler) => {
+        this.DELETE = (url, handler, responser) => {
             this.app.delete(this.getUrl(url), async (req, res) => {
+                let responseData = {};
                 try {
                     const data = await handler(req);
-                    return res.json({ data, success: true });
+                    responseData = { data, success: true };
                 }
                 catch (error) {
-                    return res.json({ error: error.message || error, success: false });
+                    responseData = { error: error.message || error, success: false };
                 }
+                return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
+                /*
+                try {
+                  const data = await handler(req);
+                  return res.json({ data, success: true });
+                } catch (error) {
+                  return res.json({ error: error.message || error, success: false });
+                }
+                */
             });
         };
         // generic DELETE handler with validation
-        this.vDELETE = (url, validator, handler) => {
+        this.vDELETE = (url, validator, handler, responser) => {
             return this.DELETE(url, async (req) => {
                 const { error, value } = validator
                     ? await validator(req)
@@ -189,14 +234,14 @@ class Api {
                     throw new InvalidParamsError("invalid params: " + error);
                 }
                 return handler(req, value);
-            });
+            }, responser);
         };
         // generic DELETE handler with validation and DB
-        this.dbDELETE = (url, validator, handler) => {
+        this.dbDELETE = (url, validator, handler, responser) => {
             return this.vDELETE(url, validator, (req, value) => {
                 const db = db_1.dbPool.get(exports.getDBContext(req));
                 return handler(db, value);
-            });
+            }, responser);
         };
         this.app = app;
         this.config = config;

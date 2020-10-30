@@ -12,6 +12,7 @@ import {
   RegionTypesRepository,
   RegionsRepository,
   OwnersRepository,
+  AuthRepository,
   FirmwaresRepository,
   DevicesRepository,
   DataRepository,
@@ -39,6 +40,7 @@ const initOptions: IInitOptions<IExtensions> = {
     obj.regiontypes = new RegionTypesRepository(obj, pgp);
     obj.regions = new RegionsRepository(obj, pgp);
     obj.owners = new OwnersRepository(obj, pgp);
+    obj.auth = new AuthRepository(obj, pgp);
     obj.firmwares = new FirmwaresRepository(obj, pgp);
     obj.devices = new DevicesRepository(obj, pgp);
     obj.data = new DataRepository(obj, pgp);

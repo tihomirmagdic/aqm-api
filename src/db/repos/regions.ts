@@ -9,7 +9,7 @@ import * as Joi from "@hapi/joi";
 
 import { shText } from "../../server/default-schemas";
 
-// id, type, name, area
+// id, type, name, coordinates
 
 // schemas
 export const shNumber = Joi.number().required();
@@ -24,7 +24,7 @@ export const shRegionsCreate = Joi.object().keys({
   id: Joi.string().required(),
   type: Joi.string().required(),
   name: Joi.string().required(),
-  area: shPolygon.required(),
+  coordinates: shPolygon.required(),
   gtype: Joi.string().valid('Polygon').required()
 });
 
@@ -32,7 +32,7 @@ export const shRegionsValues = Joi.object().keys({
   id: Joi.string(),
   type: Joi.string(),
   name: Joi.string(),
-  area: shPolygon.required(),
+  coordinates: shPolygon.required(),
   gtype: Joi.string().valid('Polygon').required()
 });
 
@@ -73,7 +73,7 @@ export class RegionsRepository {
 
   public add(type: string, values: any): any {
     //console.log("regions add0: ", values);
-    values.area = preparePolygonValues(values.area);
+    values.coordinates = preparePolygonValues(values.coordinates);
     const cols = this.existingCols(values, RegionsRepository.cs.insert);
     //console.log("values:", values);
     //console.log("cols:", cols);
@@ -81,7 +81,7 @@ export class RegionsRepository {
     //console.log("colValues:", colValues);
 
     const dbcall = type === "fast" ? this.db.none : this.db.one;
-    const returning = type === "full" ? "returning id, type, name, gtype, ST_AsText(area) area"
+    const returning = type === "full" ? "returning id, type, name, gtype, ST_AsGeoJSON(coordinates)::json->>'coordinates' coordinates"
       : type === "id" ? "returning " + this.keys.join(", ") : "";
     return dbcall(sql.add, { values, colValues, returning });
   }
@@ -89,9 +89,9 @@ export class RegionsRepository {
   public update(type: string, data: any): any {
     const where = data.ids;
     const values = data.values;
-    values.area = preparePolygonValues(values.area);
+    values.coordinates = preparePolygonValues(values.coordinates);
     const set = this.pgp.helpers.sets(values, RegionsRepository.cs.update);
-    const returning = type === "full" ? "returning id, type, name, gtype, ST_AsText(area) area" : "";
+    const returning = type === "full" ? "returning id, type, name, gtype, ST_AsGeoJSON(coordinates)::json->>'coordinates' coordinates" : "";
     if (type === "full") {
       return this.db.any(sql.update, { set, where, returning });
     } else {
@@ -114,11 +114,14 @@ export class RegionsRepository {
 
       // cs.update = cs.insert.extend(["?id", "?user_id"]);
       const colPosition = new this.pgp.helpers.Column({
-        name: "area", // required
+        name: "coordinates", // required
         mod: ":raw", // optional
         init: (params: any) => {
           console.log("cs: params: ", params);
           //return this.pgp.as.format(`point(${params.value.x}, ${params.value.y})`);
+          const c = { type: params.source.gtype, coordinates: [params.source.coordinates] };
+          return "ST_GeomFromGeoJSON('" + JSON.stringify(c) + "'::json)";
+
           return "ST_MakePolygon(ST_MakeLine(array[" + params.value.map((pt: any) => {
             console.log("pt:", pt, this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`));
             return this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`);

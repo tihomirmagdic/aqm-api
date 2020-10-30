@@ -19,8 +19,31 @@ process.env.NODE_ENV = "development";
 import express = require("express");
 import * as bodyParser from "body-parser";
 import os = require("os");
+const cors = require("cors");
 
 const app = express();
+app.use(
+  cors({
+    origin: "*",
+    credentials: true
+  })
+);
+/*
+const options = {
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'X-Access-Token',
+  ],
+  credentials: true,
+  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+  origin: '*',
+  preflightContinue: false,
+};
+app.use(cors(options));
+*/
 app.use(bodyParser.json());
 
 // Config

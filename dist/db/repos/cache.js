@@ -15,7 +15,7 @@ class CacheRepository {
     constructor(db, pgp) {
         this.loaded = false;
         this.data = {};
-        console.log("Cache constructor:");
+        //console.log("Cache constructor:");
         this.db = db;
         this.pgp = pgp;
     }

@@ -5,6 +5,7 @@ import { ConfigurationItemsRepository } from './configurationitems';
 import { RegionTypesRepository } from './regiontypes';
 import { RegionsRepository } from './regions';
 import { OwnersRepository } from './owners';
+import { AuthRepository } from './auth';
 import { FirmwaresRepository } from './firmwares';
 import { DevicesRepository } from './devices';
 import { DataRepository } from './data';
@@ -19,6 +20,7 @@ interface IExtensions {
   regiontypes: RegionTypesRepository,
   regions: RegionsRepository,
   owners: OwnersRepository,
+  auth: AuthRepository,
   firmwares: FirmwaresRepository,
   devices: DevicesRepository,
   data: DataRepository,
@@ -34,6 +36,7 @@ export {
 	RegionTypesRepository,
 	RegionsRepository,
 	OwnersRepository,
+	AuthRepository,
 	FirmwaresRepository,
 	DevicesRepository,
 	DataRepository,

@@ -12,7 +12,7 @@ const handler_1 = require("../../server/handler");
 // import _ from "lodash";
 const Joi = __importStar(require("@hapi/joi"));
 const default_schemas_1 = require("../../server/default-schemas");
-// id, type, name, area
+// id, type, name, coordinates
 // schemas
 exports.shNumber = Joi.number().required();
 exports.shPolygonPoints = Joi.array().items(exports.shNumber);
@@ -25,14 +25,14 @@ exports.shRegionsCreate = Joi.object().keys({
     id: Joi.string().required(),
     type: Joi.string().required(),
     name: Joi.string().required(),
-    area: exports.shPolygon.required(),
+    coordinates: exports.shPolygon.required(),
     gtype: Joi.string().valid('Polygon').required()
 });
 exports.shRegionsValues = Joi.object().keys({
     id: Joi.string(),
     type: Joi.string(),
     name: Joi.string(),
-    area: exports.shPolygon.required(),
+    coordinates: exports.shPolygon.required(),
     gtype: Joi.string().valid('Polygon').required()
 });
 exports.shRegionsUpdate = Joi.object().keys({
@@ -60,23 +60,23 @@ class RegionsRepository {
     }
     add(type, values) {
         //console.log("regions add0: ", values);
-        values.area = handler_1.preparePolygonValues(values.area);
+        values.coordinates = handler_1.preparePolygonValues(values.coordinates);
         const cols = this.existingCols(values, RegionsRepository.cs.insert);
         //console.log("values:", values);
         //console.log("cols:", cols);
         const colValues = this.pgp.helpers.values(values, cols);
         //console.log("colValues:", colValues);
         const dbcall = type === "fast" ? this.db.none : this.db.one;
-        const returning = type === "full" ? "returning id, type, name, gtype, ST_AsText(area) area"
+        const returning = type === "full" ? "returning id, type, name, gtype, ST_AsGeoJSON(coordinates)::json->>'coordinates' coordinates"
             : type === "id" ? "returning " + this.keys.join(", ") : "";
         return dbcall(sql.add, { values, colValues, returning });
     }
     update(type, data) {
         const where = data.ids;
         const values = data.values;
-        values.area = handler_1.preparePolygonValues(values.area);
+        values.coordinates = handler_1.preparePolygonValues(values.coordinates);
         const set = this.pgp.helpers.sets(values, RegionsRepository.cs.update);
-        const returning = type === "full" ? "returning id, type, name, gtype, ST_AsText(area) area" : "";
+        const returning = type === "full" ? "returning id, type, name, gtype, ST_AsGeoJSON(coordinates)::json->>'coordinates' coordinates" : "";
         if (type === "full") {
             return this.db.any(sql.update, { set, where, returning });
         }
@@ -96,11 +96,13 @@ class RegionsRepository {
             // const table = new helpers.TableName({table: "products", schema: "public"});
             // cs.update = cs.insert.extend(["?id", "?user_id"]);
             const colPosition = new this.pgp.helpers.Column({
-                name: "area",
+                name: "coordinates",
                 mod: ":raw",
                 init: (params) => {
                     console.log("cs: params: ", params);
                     //return this.pgp.as.format(`point(${params.value.x}, ${params.value.y})`);
+                    const c = { type: params.source.gtype, coordinates: [params.source.coordinates] };
+                    return "ST_GeomFromGeoJSON('" + JSON.stringify(c) + "'::json)";
                     return "ST_MakePolygon(ST_MakeLine(array[" + params.value.map((pt) => {
                         console.log("pt:", pt, this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`));
                         return this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`);

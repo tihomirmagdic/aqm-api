@@ -11,6 +11,9 @@ const owners_1 = require("../db/repos/owners");
 const firmwares_1 = require("../db/repos/firmwares");
 const devices_1 = require("../db/repos/devices");
 const data_1 = require("../db/repos/data");
+//import { passport } from "../db/repos/passport-setup";
+const passport = require('passport');
+const passport_setup_1 = require("../db/repos/passport-setup");
 exports.defineRoutes = (app, config) => {
     const routes = new handler_1.Api(app, config);
     //////////////////////////////////////////////
@@ -93,6 +96,77 @@ exports.defineRoutes = (app, config) => {
     routes.dbPUT("/owners/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeUpdate), handler_1.valid(req.body, owners_1.shOwnersUpdate)]), (db, values) => db.owners.update(values[0].type, values[1]));
     // remove owner(s)
     routes.dbDELETE("/owners", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDs)]), (db, values) => db.owners.delete(values[0].ids));
+    //////////////////////////////////////////////
+    // Auth REST API
+    //////////////////////////////////////////////
+    passport_setup_1.setup(app, passport);
+    const ensureAuthenticated = (req, res, next) => {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        res.redirect('/login');
+    };
+    app.get("/api/v1/auth/test", (req, res) => {
+        if (req.user) {
+            res.send("user " + req.user.email + " logged in");
+        }
+        else {
+            res.send("user not logged in");
+        }
+    });
+    // login - type is google, facebook
+    // routes.dbPOST(["/auth/:type", "/login/:type"]
+    app.get("/aapi/v1/auth/google", (req, res, next) => {
+        //res.setHeader("Access-Control-Allow-Origin", "*");
+        next();
+    }, passport.authenticate('google', { scope: ['email', 'profile'] }));
+    app.get("/api/v1/auth/google", passport.authenticate('google', { scope: ['email', 'profile'] }), (req, res) => {
+        console.log("google auth");
+        res.send("google auth");
+    });
+    app.get("/api/v1/auth/facebook", passport.authenticate('facebook', { scope: ['email'] }), (req, res) => {
+        console.log("facebook auth");
+        res.send("facebook auth");
+    });
+    const signToken = (user) => {
+        return user;
+    };
+    app.post("/api/v1/auth/local", passport.authenticate('local'), (req, res) => {
+        console.log("local auth with user:", req.user);
+        /*
+        const token = signToken(req.user);
+    res.cookie('access_token', token, {
+      httpOnly: true
+        });
+        */
+        res.status(200).json({ success: true });
+    });
+    app.get("/api/v1/auth/google/redirect", passport.authenticate('google'), (req, res) => {
+        //res.send("google auth redirected");
+        res.redirect("http://localhost:4200/auth");
+        //res.status(200).json(req.user);
+    });
+    app.get("/api/v1/auth/facebook/redirect", passport.authenticate('facebook'), (req, res) => {
+        //res.send("facebook auth redirected");
+        res.redirect("http://localhost:4200/auth");
+        //res.status(200).json(req.user);
+    });
+    app.delete("/api/v1/auth", (req, res) => {
+        console.log("before logout");
+        if (req.logout) {
+            console.log("user logged out");
+            req.logout();
+            //res.clearCookie('access_token');
+        }
+        res.send("after logout");
+    });
+    /*
+    routes.dbPOST("/auth",
+        (req: Request) => multiValidator([valid(req.body, shAuthCreateLocal)]),
+        (db: DB, values: any[]) => db.auth.create(values[0]));
+    */
+    // logout
+    routes.dbDELETE("/auth", null, (db, values) => db.auth.delete());
     //////////////////////////////////////////////
     // Firmwares REST API
     //////////////////////////////////////////////

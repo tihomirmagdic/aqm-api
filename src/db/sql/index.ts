@@ -58,6 +58,11 @@ export const owners = {
 	remove: sql('owners/remove.sql'),
 };
 
+export const auth = {
+	checkEmailPassword: sql('auth/check-email-password.sql'),
+	checkEmail: sql('auth/check-email.sql'),
+};
+
 export const firmwares = {
 	getAll: sql('firmwares/get-all.sql'),
 	getByIDs: sql('firmwares/get-by-ids.sql'),

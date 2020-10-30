@@ -243,7 +243,7 @@ export class DataRepository {
         lastPage = !(data.length > config.pageSize)
         data = data.slice(limit - 1)
     */
-    /*
+    
     console.log("config:", config);
     console.log("page:", page);
     console.log("values:", values);
@@ -253,7 +253,7 @@ export class DataRepository {
     console.log("locations:", locations);
     console.log("order:", order);
     console.log("limit:", limit);
-    */
+    
     return this.db.any(sql.get, {
       fields,
       measured,

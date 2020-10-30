@@ -11,17 +11,19 @@ const sqlProvider = require("../sql");
 // import _ from "lodash";
 const Joi = __importStar(require("@hapi/joi"));
 const default_schemas_1 = require("../../server/default-schemas");
-// id, email, name, created, note
+// id, email, name, created, password, admin, enabled
 // schemas
 exports.shOwnersCreate = Joi.object().keys({
     email: Joi.string().email().required(),
     name: Joi.string().required(),
-    note: Joi.string()
+    password: Joi.string().required(),
+    admin: Joi.boolean().default(false),
+    enabled: Joi.boolean().default(true)
 });
 exports.shOwnersValues = Joi.object().keys({
     email: Joi.string().email(),
     name: Joi.string(),
-    note: Joi.string()
+    password: Joi.string()
 });
 exports.shOwnersUpdate = Joi.object().keys({
     ids: Joi.array().items(default_schemas_1.shID).required(),
