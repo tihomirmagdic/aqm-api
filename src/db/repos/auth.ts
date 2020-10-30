@@ -1,17 +1,9 @@
 import { IDatabase, IMain } from "pg-promise";
-import { IResult } from "pg-promise/typescript/pg-subset";
 import sqlProvider = require("../sql");
-import {
-  IExtensions,
-  OwnersRepository,
-} from "../../db/repos";
+import { IExtensions } from "../../db/repos";
 // import _ from "lodash";
 
 import * as Joi from "@hapi/joi";
-
-const passport = require('passport');
-
-import { shID } from "../../server/default-schemas";
 
 // id, email, name, admin, enabled, created
 // hidden: password, salt
