@@ -4,9 +4,8 @@ const FacebookStrategy = require('passport-facebook');
 const LocalStrategy = require('passport-local');
 import { google, facebook } from "./keys";
 import cookieSession = require('cookie-session');
-import { DB, dbPool } from "../../db";
+import { dbPool } from "../../db";
 import { getDBContext } from "../../server/handler";
-import { exception } from "console";
 
 export const setup = (app: any, passport: any) => {
   console.log("google keys:", google);
