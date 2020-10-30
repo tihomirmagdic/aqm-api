@@ -10,7 +10,6 @@ import { shConfigurationItemsIds, shConfigurationItemsCreate, shConfigurationIte
 import { shRegionTypesCreate, shRegionTypesUpdate } from "../db/repos/regiontypes";
 import { shRegionsCreate, shRegionsUpdate } from "../db/repos/regions";
 import { shOwnersCreate, shOwnersUpdate } from "../db/repos/owners";
-import { shAuthTypeCreate, shAuthCreateLocal } from "../db/repos/auth";
 import { shFirmwaresCreate, shFirmwaresUpdate } from "../db/repos/firmwares";
 import { shDevicesCreate, shDevicesUpdate } from "../db/repos/devices";
 import { shDataRetrievePage, shshTypeCreateData, shDataCreateHeader, shDataCreate, shDataRetreive } from "../db/repos/data";
@@ -18,8 +17,6 @@ import { shDataRetrievePage, shshTypeCreateData, shDataCreateHeader, shDataCreat
 //import { passport } from "../db/repos/passport-setup";
 const passport = require('passport');
 import { setup } from "../db/repos/passport-setup";
-
-import { nextTick } from "process";
 
 export const defineRoutes = (app: any, config: any) => {
 	const routes: any = new Api(app, config);
