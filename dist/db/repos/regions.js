@@ -102,7 +102,7 @@ class RegionsRepository {
                     console.log("cs: params: ", params);
                     //return this.pgp.as.format(`point(${params.value.x}, ${params.value.y})`);
                     const c = { type: params.source.gtype, coordinates: [params.source.coordinates] };
-                    return "ST_GeomFromGeoJSON('" + JSON.stringify(c) + "'::json)";
+                    return "ST_SetSRID(ST_GeomFromGeoJSON('" + JSON.stringify(c) + "'::json), 4326)";
                     return "ST_MakePolygon(ST_MakeLine(array[" + params.value.map((pt) => {
                         console.log("pt:", pt, this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`));
                         return this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`);
