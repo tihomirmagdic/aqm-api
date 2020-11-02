@@ -108,7 +108,17 @@ exports.defineRoutes = (app, config) => {
     };
     app.get("/api/v1/auth/test", (req, res) => {
         if (req.user) {
-            res.send("user " + req.user.email + " logged in");
+            //res.send("user " + req.user.email + " logged in");
+            res.status(200).json({ currentuser: { name: req.user.name, email: req.user.email, admin: req.user.admin }, success: true });
+        }
+        else {
+            res.send("user not logged in");
+        }
+    });
+    app.get("/api/v1/auth/currentuser", (req, res) => {
+        if (req.user) {
+            //res.send("user " + req.user.email + " logged in");
+            res.status(200).json({ currentuser: { name: req.user.name, email: req.user.email, admin: req.user.admin }, success: true });
         }
         else {
             res.send("user not logged in");
@@ -139,7 +149,7 @@ exports.defineRoutes = (app, config) => {
       httpOnly: true
         });
         */
-        res.status(200).json({ success: true });
+        res.status(200).json({ user: { name: req.user.name, email: req.user.email, admin: req.user.admin }, success: true });
     });
     app.get("/api/v1/auth/google/redirect", passport.authenticate('google'), (req, res) => {
         //res.send("google auth redirected");
