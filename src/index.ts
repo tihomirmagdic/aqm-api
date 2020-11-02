@@ -16,12 +16,11 @@
 
 process.env.NODE_ENV = "development";
 
+require('dotenv').config();
 import express = require("express");
 import * as bodyParser from "body-parser";
 import os = require("os");
 const cors = require("cors");
-
-console.log("proces.env:", process.env);
 
 const app = express();
 app.use(

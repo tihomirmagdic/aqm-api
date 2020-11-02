@@ -23,11 +23,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 process.env.NODE_ENV = "development";
+require('dotenv').config();
 const express = require("express");
 const bodyParser = __importStar(require("body-parser"));
 const os = require("os");
 const cors = require("cors");
-console.log("proces.env:", process.env);
 const app = express();
 app.use(cors({
     origin: "*",
