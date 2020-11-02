@@ -27,6 +27,7 @@ const express = require("express");
 const bodyParser = __importStar(require("body-parser"));
 const os = require("os");
 const cors = require("cors");
+console.log("proces.env:", process.env);
 const app = express();
 app.use(cors({
     origin: "*",

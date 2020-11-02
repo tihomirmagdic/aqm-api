@@ -10,7 +10,7 @@ exports.dbConfig = {
     //"postgres://nshsodqdoimnqo:9ba94ac902fa70628a04020137a5b91b9d9172b751b3b40e65daaf4864d4ca46@ec2-52-86-116-94.compute-1.amazonaws.com:5432/d9o5v8kne8u0su?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",
     //"postgres://nshsodqdoimnqo:9ba94ac902fa70628a04020137a5b91b9d9172b751b3b40e65daaf4864d4ca46@ec2-52-86-116-94.compute-1.amazonaws.com:5432/d9o5v8kne8u0su",
     host: process.env.PG_HOST || "localhost",
-    port: process.env.PG_PORT || 5432,
+    port: +(process.env.PG_PORT || 5432),
     database: process.env.PG_DATABASE || "postgres",
     user: process.env.PG_USER || "postgres",
     password: process.env.PG_PASSWORD || "pg",
