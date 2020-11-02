@@ -274,7 +274,8 @@ export const defineRoutes = (app: any, config: any) => {
 			req.logout();
 			//res.clearCookie('access_token');
 		}
-		res.send("after logout");
+		console.log("after logout");
+		res.status(200).json({ success: true });
 	});
 	/*
 	routes.dbPOST("/auth",
