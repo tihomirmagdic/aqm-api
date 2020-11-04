@@ -194,7 +194,7 @@ export class DataRepository {
     } else {
       if (values.locations.name) {
         addTables = `, airq.regions r\n`;
-        locations = `r.id = '${values.locations.name}' and ST_Contains(gps, r.coordinates)`;
+        locations = `r.id = '${values.locations.name}' and ST_Contains(r.coordinates, gps)`;
       } else if (values.locations.polygon) {
         const polygon = values.locations.polygon;
         // console.log("polygon:", polygon);
