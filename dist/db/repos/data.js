@@ -133,7 +133,7 @@ class DataRepository {
         else {
             if (values.locations.name) {
                 addTables = `, airq.regions r\n`;
-                locations = `r.id = '${values.locations.name}' and st_within(gps, r.coordinates)`;
+                locations = `r.id = '${values.locations.name}' and ST_Contains(gps, r.coordinates)`;
             }
             else if (values.locations.polygon) {
                 const polygon = values.locations.polygon;
