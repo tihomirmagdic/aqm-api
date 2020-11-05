@@ -58,7 +58,7 @@ const pgp: IMain = pgPromise(initOptions);
 const db: ExtendedProtocol = pgp(dbConfig);
 
 // Initializing optional diagnostics:
-Diagnostics.init(initOptions);
+//Diagnostics.init(initOptions);
 
 interface DBKey {
   config: any;

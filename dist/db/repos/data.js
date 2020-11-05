@@ -99,7 +99,7 @@ class DataRepository {
         this.createColumnsets();
     }
     get(page, values) {
-        const config = { pageSize: 5, owner: 1 }; // from configuration
+        const config = { pageSize: 500, owner: 1 }; // from configuration
         const aFields = values.sensors;
         /*
         this.replaceFields(aFields,
@@ -138,10 +138,15 @@ class DataRepository {
             else if (values.locations.polygon) {
                 const polygon = values.locations.polygon;
                 // console.log("polygon:", polygon);
-                if (polygon[0][0] !== polygon[polygon.length - 1][0] &&
-                    polygon[0][1] !== polygon[polygon.length - 1][1]) {
-                    polygon.push(polygon[0]);
+                polygon.push(polygon[0]);
+                /*
+                if (
+                  polygon[0][0] !== polygon[polygon.length - 1][0] &&
+                  polygon[0][1] !== polygon[polygon.length - 1][1]
+                ) {
+                  polygon.push(polygon[0]);
                 }
+                */
                 if (polygon.length < 4) {
                     throw new Error("Polygon with insufficient number of points");
                 }
@@ -172,6 +177,7 @@ class DataRepository {
             lastPage = !(data.length > config.pageSize)
             data = data.slice(limit - 1)
         */
+        /*
         console.log("config:", config);
         console.log("page:", page);
         console.log("values:", values);
@@ -181,6 +187,7 @@ class DataRepository {
         console.log("locations:", locations);
         console.log("order:", order);
         console.log("limit:", limit);
+        */
         return this.db.any(sql.get, {
             fields,
             measured,
