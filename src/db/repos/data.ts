@@ -158,7 +158,7 @@ export class DataRepository {
   };
 
   public get(page: number, values: any) {
-    const config = { pageSize: 5, owner: 1 }; // from configuration
+    const config = { pageSize: 100, owner: 1 }; // from configuration
 
     const aFields = values.sensors;
     /*

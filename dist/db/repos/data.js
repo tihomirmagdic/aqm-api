@@ -99,7 +99,7 @@ class DataRepository {
         this.createColumnsets();
     }
     get(page, values) {
-        const config = { pageSize: 5, owner: 1 }; // from configuration
+        const config = { pageSize: 100, owner: 1 }; // from configuration
         const aFields = values.sensors;
         /*
         this.replaceFields(aFields,
