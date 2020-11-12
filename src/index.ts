@@ -23,13 +23,14 @@ import os = require("os");
 const cors = require("cors");
 
 const app = express();
+/*
 app.use(
   cors({
     origin: "*",
     credentials: true
   })
 );
-/*
+*/
 const options = {
   allowedHeaders: [
     'Origin',
@@ -41,20 +42,22 @@ const options = {
   credentials: true,
   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
   origin: '*',
+  maxAge: 60, // to eliminate preflight requests
   preflightContinue: false,
 };
 app.use(cors(options));
-*/
 
+/*
 app.use((req: any, res: any, next: any) => {
   req.headers['content-type'] = 'application/json';
-  /*
+  
   if (req.headers['x-prevent-preflight']) {
     req.headers['content-type'] = req.headers['x-preflight-content-type'];
   }
-  */
+  
   next();
 });
+*/
 
 app.use(bodyParser.json());
 
