@@ -46,7 +46,7 @@ const options = {
 app.use(cors(options));
 */
 
-app.use(function(req: any, res: any, next){
+app.use((req: any, res: any, next: any) => {
   req.headers['content-type'] = 'application/json';
   /*
   if (req.headers['x-prevent-preflight']) {

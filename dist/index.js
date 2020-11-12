@@ -49,7 +49,7 @@ const options = {
 };
 app.use(cors(options));
 */
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     req.headers['content-type'] = 'application/json';
     /*
     if (req.headers['x-prevent-preflight']) {
