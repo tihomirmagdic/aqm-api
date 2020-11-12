@@ -45,6 +45,17 @@ const options = {
 };
 app.use(cors(options));
 */
+
+app.use(function(req: any, res: any, next){
+  req.headers['content-type'] = 'application/json';
+  /*
+  if (req.headers['x-prevent-preflight']) {
+    req.headers['content-type'] = req.headers['x-preflight-content-type'];
+  }
+  */
+  next();
+});
+
 app.use(bodyParser.json());
 
 // Config
