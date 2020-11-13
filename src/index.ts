@@ -38,6 +38,8 @@ const options = {
     'Content-Type',
     'Accept',
     'X-Access-Token',
+    'X-prevent-preflight',
+    'X-preflight-content-type'
   ],
   credentials: true,
   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
@@ -47,17 +49,15 @@ const options = {
 };
 app.use(cors(options));
 
-/*
 app.use((req: any, res: any, next: any) => {
   req.headers['content-type'] = 'application/json';
   
-  if (req.headers['x-prevent-preflight']) {
-    req.headers['content-type'] = req.headers['x-preflight-content-type'];
+  if (req.headers['X-prevent-preflight']) {
+    req.headers['Content-type'] = req.headers['X-preflight-content-type'];
   }
   
   next();
 });
-*/
 
 app.use(bodyParser.json());
 
