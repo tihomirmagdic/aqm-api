@@ -210,7 +210,8 @@ export const defineRoutes = (app: any, config: any) => {
 			//res.send("user " + req.user.email + " logged in");
 			res.status(200).json({ currentuser: { name: req.user.name, email: req.user.email, admin: req.user.admin }, success: true });
 		} else {
-			res.send("user not logged in");
+			//res.send("user not logged in");
+			res.status(401).end('Unauthorized'); //.send("user not logged in");
 		}
 	});
 
@@ -219,7 +220,8 @@ export const defineRoutes = (app: any, config: any) => {
 			//res.send("user " + req.user.email + " logged in");
 			res.status(200).json({ currentuser: { name: req.user.name, email: req.user.email, admin: req.user.admin }, success: true });
 		} else {
-			res.send("user not logged in");
+			//res.send("user not logged in");
+			res.status(401).end('Unauthorized'); //.send("user not logged in");
 		}
 	});
 
