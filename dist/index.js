@@ -28,6 +28,7 @@ const express = require("express");
 const bodyParser = __importStar(require("body-parser"));
 const os = require("os");
 const cors = require("cors");
+const helmet = require("helmet");
 const app = express();
 /*
 app.use(
@@ -62,6 +63,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use(bodyParser.json());
+app.use(helmet());
 // Config
 const config_1 = require("./server/config");
 const api_1 = require("./server/api");

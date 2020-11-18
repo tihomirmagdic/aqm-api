@@ -21,6 +21,7 @@ import express = require("express");
 import * as bodyParser from "body-parser";
 import os = require("os");
 const cors = require("cors");
+import helmet = require("helmet");
 
 const app = express();
 /*
@@ -60,6 +61,8 @@ app.use((req: any, res: any, next: any) => {
 });
 
 app.use(bodyParser.json());
+
+app.use(helmet());
 
 // Config
 import { config } from "./server/config";
