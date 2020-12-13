@@ -14,12 +14,14 @@ import { shID } from "../../server/default-schemas";
 // schemas
 export const shDevicesCreate = Joi.object().keys({
   type: Joi.string().required(),
+  name: Joi.string().required(),
   owner: Joi.number().required(),
   firmware: Joi.number().required(),
   ffirmware: Joi.number().allow(null),
   configuration: Joi.string().required(),
   fconfiguration: Joi.string().allow(null),
   apikey: Joi.string().required(),
+  public: Joi.boolean().required(),
   note: Joi.string(),
   enabled: Joi.boolean(),
 });
@@ -27,11 +29,13 @@ export const shDevicesCreate = Joi.object().keys({
 export const shDevicesValues = Joi.object().keys({
   type: Joi.string(),
   owner: Joi.number(),
+  name: Joi.string(),
   firmware: Joi.number(),
   ffirmware: Joi.number().allow(null),
   configuration: Joi.string(),
   fconfiguration: Joi.string().allow(null),
   apikey: Joi.string(),
+  public: Joi.boolean(),
   note: Joi.string(),
   enabled: Joi.boolean(),
 });
