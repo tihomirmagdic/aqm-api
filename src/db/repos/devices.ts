@@ -14,7 +14,7 @@ import { shID } from "../../server/default-schemas";
 // schemas
 export const shDevicesCreate = Joi.object().keys({
   type: Joi.string().required(),
-  name: Joi.string().required(),
+  name: Joi.string(),
   owner: Joi.number().required(),
   firmware: Joi.number().required(),
   ffirmware: Joi.number().allow(null),

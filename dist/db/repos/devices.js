@@ -15,7 +15,7 @@ const default_schemas_1 = require("../../server/default-schemas");
 // schemas
 exports.shDevicesCreate = Joi.object().keys({
     type: Joi.string().required(),
-    name: Joi.string().required(),
+    name: Joi.string(),
     owner: Joi.number().required(),
     firmware: Joi.number().required(),
     ffirmware: Joi.number().allow(null),
