@@ -23,7 +23,9 @@ export const shOwnersCreate = Joi.object().keys({
 export const shOwnersValues = Joi.object().keys({
   email: Joi.string().email(),
   name: Joi.string(),
-  password: Joi.string()
+  password: Joi.string(),
+  admin: Joi.boolean(),
+  enabled: Joi.boolean()
 });
 
 export const shOwnersUpdate = Joi.object().keys({

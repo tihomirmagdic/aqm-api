@@ -23,7 +23,9 @@ exports.shOwnersCreate = Joi.object().keys({
 exports.shOwnersValues = Joi.object().keys({
     email: Joi.string().email(),
     name: Joi.string(),
-    password: Joi.string()
+    password: Joi.string(),
+    admin: Joi.boolean(),
+    enabled: Joi.boolean()
 });
 exports.shOwnersUpdate = Joi.object().keys({
     ids: Joi.array().items(default_schemas_1.shID).required(),
