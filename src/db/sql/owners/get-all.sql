@@ -1,4 +1,4 @@
 select 
-  *--id, email, name, admin, enabled, created
+  id, email, name, admin, enabled, created, groupowner
 from
   airq.owners

@@ -9,7 +9,7 @@ import * as Joi from "@hapi/joi";
 
 import { shID } from "../../server/default-schemas";
 
-// id, email, name, created, password, admin, enabled
+// id, email, name, created, password, admin, enabled, groupowner
 
 // schemas
 export const shOwnersCreate = Joi.object().keys({
@@ -17,7 +17,8 @@ export const shOwnersCreate = Joi.object().keys({
   name: Joi.string().required(),
   password: Joi.string().required(),
   admin: Joi.boolean().default(false),
-  enabled: Joi.boolean().default(true)
+  enabled: Joi.boolean().default(true),
+  groupowner: Joi.boolean().default(false)
 });
 
 export const shOwnersValues = Joi.object().keys({
@@ -25,7 +26,8 @@ export const shOwnersValues = Joi.object().keys({
   name: Joi.string(),
   password: Joi.string(),
   admin: Joi.boolean(),
-  enabled: Joi.boolean()
+  enabled: Joi.boolean(),
+  groupowner: Joi.boolean()
 });
 
 export const shOwnersUpdate = Joi.object().keys({
