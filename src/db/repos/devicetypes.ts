@@ -16,12 +16,14 @@ export const shDeviceTypesCreate = Joi.object().keys({
   id: Joi.string().required(),
   name: Joi.string().required(),
   version: Joi.string().required(),
+  initgroupowner: Joi.number().required(),
 });
 
 export const shDeviceTypesValues = Joi.object().keys({
   id: Joi.string(),
   name: Joi.string(),
   version: Joi.string(),
+  initgroupowner: Joi.number(),
 });
 
 export const shDeviceTypesUpdate = Joi.object().keys({

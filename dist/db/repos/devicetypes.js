@@ -18,11 +18,13 @@ exports.shDeviceTypesCreate = Joi.object().keys({
     id: Joi.string().required(),
     name: Joi.string().required(),
     version: Joi.string().required(),
+    initgroupowner: Joi.number().required(),
 });
 exports.shDeviceTypesValues = Joi.object().keys({
     id: Joi.string(),
     name: Joi.string(),
     version: Joi.string(),
+    initgroupowner: Joi.number(),
 });
 exports.shDeviceTypesUpdate = Joi.object().keys({
     ids: Joi.array().items(default_schemas_1.shText).required(),
