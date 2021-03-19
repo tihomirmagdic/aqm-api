@@ -16,7 +16,7 @@ const Joi = __importStar(require("@hapi/joi"));
 exports.shTypeCreateData = Joi.string().required().valid("full", "fast");
 const shSensors = Joi.string()
     .required()
-    .valid("pm10", "pm2_5", "so2", "co", "o3", "pb", "hc", "voc", "temp", "humidity", "pressure", "gps", "battery", "measured");
+    .valid("pm10", "pm2_5", "so2", "co", "o3", "pb", "hc", "voc", "temp", "humidity", "pressure", "gps", "battery", "measured", "aqi");
 const thDate = Joi.object()
     .keys({
     date: Joi.date(),

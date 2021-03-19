@@ -29,7 +29,8 @@ const shSensors = Joi.string()
     "pressure",
     "gps",
     "battery",
-    "measured"
+    "measured",
+    "aqi"
   );
 const thDate = Joi.object()
   .keys({
