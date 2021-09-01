@@ -37,7 +37,7 @@ const sql = sqlProvider.owners;
 class OwnersRepository {
     constructor(db, pgp) {
         this.keys = ["id"];
-        this.secure_columns = "id, email, name, created, admin, enabled, groupowner"; // all except password and salt
+        this.secureColumns = "id, email, name, created, admin, enabled, groupowner"; // all except password and salt
         this.db = db;
         this.pgp = pgp;
     }
@@ -52,13 +52,13 @@ class OwnersRepository {
         //console.log("values:", values);
         const colValues = this.pgp.helpers.values(values);
         const dbcall = type === "fast" ? this.db.none : this.db.one;
-        const returning = type === "full" ? `returning ${this.secure_columns}` : type === "id" ? "returning " + this.keys.join(", ") : "";
+        const returning = type === "full" ? `returning ${this.secureColumns}` : type === "id" ? "returning " + this.keys.join(", ") : "";
         return dbcall(sql.add, { values, colValues, returning });
     }
     update(type, data) {
         const where = data.ids;
         const set = this.pgp.helpers.sets(data.values);
-        const returning = type === "full" ? `returning ${this.secure_columns}` : "";
+        const returning = type === "full" ? `returning ${this.secureColumns}` : "";
         if (type === "full") {
             return this.db.any(sql.update, { set, where, returning });
         }
