@@ -57,8 +57,8 @@ export class OwnersRepository {
   }
 
   public add(type: string, values: any): any {
-    console.log("type:", type);
-    console.log("values:", values);
+    //console.log("type:", type);
+    //console.log("values:", values);
     const colValues = this.pgp.helpers.values(values);
     const dbcall = type === "fast" ? this.db.none : this.db.one;
     const returning = type === "full" ? `returning ${this.secure_columns}` : type === "id" ? "returning " + this.keys.join(", ") : "";
