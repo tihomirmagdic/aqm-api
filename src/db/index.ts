@@ -58,7 +58,7 @@ const pgp: IMain = pgPromise(initOptions);
 const db: ExtendedProtocol = pgp(dbConfig);
 
 // Initializing optional diagnostics:
-//Diagnostics.init(initOptions);
+Diagnostics.init(initOptions);
 
 interface DBKey {
   config: any;
@@ -80,8 +80,8 @@ class DBPool {
       ldb = pgp(dbKey.config) as DB;
       this.pool.set(dbKey.key, ldb);
     }
-		return ldb;
-		*/
+    return ldb;
+    */
   };
 
   public remove = (ct: any): boolean => {

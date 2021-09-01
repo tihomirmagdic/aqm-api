@@ -10,6 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const promise = __importStar(require("bluebird")); // best promise library today
 const db_config_1 = require("../db-config"); // db connection details
 const pgPromise = require("pg-promise");
+const diagnostics_1 = require("./diagnostics"); // optional diagnostics
 const repos_1 = require("../db/repos");
 // pg-promise initialization options:
 const initOptions = {
@@ -42,6 +43,8 @@ exports.pgp = pgp;
 //console.log("dbConfig:", dbConfig);
 const db = pgp(db_config_1.dbConfig);
 exports.db = db;
+// Initializing optional diagnostics:
+diagnostics_1.Diagnostics.init(initOptions);
 class DBPool {
     constructor() {
         this.pool = new Map();
@@ -57,8 +60,8 @@ class DBPool {
               ldb = pgp(dbKey.config) as DB;
               this.pool.set(dbKey.key, ldb);
             }
-                return ldb;
-                */
+            return ldb;
+            */
         };
         this.remove = (ct) => {
             const dbKey = this.key(ct);

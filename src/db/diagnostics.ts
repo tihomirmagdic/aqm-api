@@ -9,16 +9,17 @@
 import os = require('os');
 import fs = require('fs');
 import * as pgMonitor from 'pg-monitor';
-import {IInitOptions} from 'pg-promise';
+import { IInitOptions } from 'pg-promise';
 
 pgMonitor.setTheme('matrix'); // changing the default theme;
 pgMonitor.setDetailed(true);
 // Flag to indicate whether we are in a DEV environment:
 console.log('process.env.NODE_ENV:', process.env.NODE_ENV);
 const $DEV = process.env.NODE_ENV === 'development';
+console.log('$DEV: ' + $DEV);
 
 // Log file for database-related errors:
-const logFile = './db/errors.log';
+const logFile = './errors.log';
 
 // Below we are logging errors exactly the way they are reported by pg-monitor,
 // which you can tweak any way you like, as parameter 'info' provides all the
@@ -40,7 +41,7 @@ pgMonitor.setLog((msg, info) => {
             // and not an additional error line;
             logText = os.EOL + logText; // add another line break in front;
         }
-        //fs.appendFileSync(logFile, logText); // add error handling as required;
+        fs.appendFileSync(logFile, logText); // add error handling as required;
         console.log(logText);
     }
 
