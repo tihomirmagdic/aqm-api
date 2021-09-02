@@ -7,6 +7,8 @@ import {
   IExtensions,
   CacheRepository,
   DeviceTypesRepository,
+  TranslationsRepository,
+  DictionaryRepository,
   ConfigurationsRepository,
   ConfigurationItemsRepository,
   FiltersRepository,
@@ -37,6 +39,8 @@ const initOptions: IInitOptions<IExtensions> = {
     // which should be as fast as possible.
     obj.cache = new CacheRepository(obj, pgp);
     obj.devicetypes = new DeviceTypesRepository(obj, pgp);
+    obj.translations = new TranslationsRepository(obj, pgp);
+    obj.dictionary = new DictionaryRepository(obj, pgp);
     obj.configurations = new ConfigurationsRepository(obj, pgp);
     obj.configurationitems = new ConfigurationItemsRepository(obj, pgp);
     obj.filters = new FiltersRepository(obj, pgp);

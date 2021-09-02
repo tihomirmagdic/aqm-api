@@ -5,6 +5,8 @@ import { multiValidator, valid, Api } from "./handler";
 import { shID, shDefaultIDs, shDefaultIDsAsText, shText, shDefaultTypeCreate, shDefaultTypeUpdate } from "./default-schemas";
 
 import { shDeviceTypesCreate, shDeviceTypesUpdate } from "../db/repos/devicetypes";
+import { shTranslationsCreate, shTranslationsUpdate } from "../db/repos/translations";
+import { shDictionaryIds, shDictionaryCreate, shDictionaryUpdate } from "../db/repos/dictionary";
 import { shConfigurationsCreate, shConfigurationsUpdate } from "../db/repos/configurations";
 import { shConfigurationItemsIds, shConfigurationItemsCreate, shConfigurationItemsUpdate } from "../db/repos/configurationitems";
 import { shFiltersCreate, shFiltersUpdate } from "../db/repos/filters";
@@ -50,6 +52,63 @@ export const defineRoutes = (app: any, config: any) => {
 	routes.dbDELETE("/devicetypes",
 		(req: Request) => multiValidator([valid(req.body, shDefaultIDsAsText)]),
 		(db: DB, values: any) => db.devicetypes.delete(values[0].ids));
+
+	//////////////////////////////////////////////
+	// Translations REST API
+	//////////////////////////////////////////////
+
+	// get all translations
+	routes.dbGET("/translations", null,
+		(db: DB) => db.translations.get());
+
+	// get translations by IDs
+	routes.dbPOST("/translations",
+		(req: Request) => multiValidator([valid(req.body, shDefaultIDsAsText)]),
+		(db: DB, values: any[]) => db.translations.getByIDs(values[0].ids));
+
+	// create new translation
+	routes.dbPOST("/translations/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shTranslationsCreate)]),
+		(db: DB, values: any[]) => db.translations.add(values[0].type, values[1]));
+
+	// update translation(s)
+	routes.dbPUT("/translations/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeUpdate), valid(req.body, shTranslationsUpdate)]),
+		(db: DB, values: any[]) => db.translations.update(values[0].type, values[1]));
+
+	// remove translation(s)
+	routes.dbDELETE("/translations",
+		(req: Request) => multiValidator([valid(req.body, shDefaultIDsAsText)]),
+		(db: DB, values: any) => db.translations.delete(values[0].ids));
+
+	//////////////////////////////////////////////
+	// Dictionary REST API
+	//////////////////////////////////////////////
+
+	// get dictionary by translation
+	routes.dbGET("/dictionary/:id",
+		(req: Request) => multiValidator([valid(req.params, shText)]),
+		(db: DB, values: any[]) => db.dictionary.getByTranslation(values[0].id));
+
+	// get some dictionaries
+	routes.dbPOST("/dictionary",
+		(req: Request) => multiValidator([valid(req.body, shDictionaryIds)]),
+		(db: DB, values: any[]) => db.dictionary.getByIDs(values[0].ids));
+
+	// create new translation
+	routes.dbPOST("/dictionary/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shDictionaryCreate)]),
+		(db: DB, values: any[]) => db.dictionary.add(values[0].type, values[1]));
+
+	// update translation(s)
+	routes.dbPUT("/dictionary/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeUpdate), valid(req.body, shDictionaryUpdate)]),
+		(db: DB, values: any[]) => db.dictionary.update(values[0].type, values[1]));
+
+	// remove translation(s)
+	routes.dbDELETE("/dictionary",
+		(req: Request) => multiValidator([valid(req.body, shDictionaryIds)]),
+		(db: DB, values: any) => db.dictionary.delete(values[0].ids));
 
 	//////////////////////////////////////////////
 	// Configurations REST API

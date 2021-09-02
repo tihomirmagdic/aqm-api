@@ -17,6 +17,22 @@ export const devicetypes = {
 	remove: sql('device-types/remove.sql'),
 };
 
+export const translations = {
+	getAll: sql('translations/get-all.sql'),
+	getByIDs: sql('translations/get-by-ids.sql'),
+	add: sql('translations/add.sql'),
+	update: sql('translations/update.sql'),
+	remove: sql('translations/remove.sql'),
+};
+
+export const dictionary = {
+	getByTranslation: sql('dictionary/get-by-translation.sql'),
+	getByIDs: sql('dictionary/get-by-ids.sql'),
+	add: sql('dictionary/add.sql'),
+	update: sql('dictionary/update.sql'),
+	remove: sql('dictionary/remove.sql'),
+};
+
 export const filters = {
 	getAll: sql('filters/get-all.sql'),
 	getByIDs: sql('filters/get-by-ids.sql'),

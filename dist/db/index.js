@@ -24,6 +24,8 @@ const initOptions = {
         // which should be as fast as possible.
         obj.cache = new repos_1.CacheRepository(obj, pgp);
         obj.devicetypes = new repos_1.DeviceTypesRepository(obj, pgp);
+        obj.translations = new repos_1.TranslationsRepository(obj, pgp);
+        obj.dictionary = new repos_1.DictionaryRepository(obj, pgp);
         obj.configurations = new repos_1.ConfigurationsRepository(obj, pgp);
         obj.configurationitems = new repos_1.ConfigurationItemsRepository(obj, pgp);
         obj.filters = new repos_1.FiltersRepository(obj, pgp);
