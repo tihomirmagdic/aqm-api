@@ -47,15 +47,15 @@ const sql = sqlProvider.devices;
 class DevicesRepository {
     constructor(db, pgp) {
         this.keys = ["id"];
-        //console.log("Device constructor:");
+        // console.log("Device constructor:");
         this.db = db;
         this.pgp = pgp;
     }
     get() {
-        //return { a: "b" };
-        //console.log("before GET:", sql.getAll);
-        //console.log("db.$cn:", this.db.$cn);
-        //console.log("db.$config:", this.db.$config);
+        // return { a: "b" };
+        // console.log("before GET:", sql.getAll);
+        // console.log("db.$cn:", this.db.$cn);
+        // console.log("db.$config:", this.db.$config);
         return this.db.any(sql.getAll);
     }
     getByIDs(where) {

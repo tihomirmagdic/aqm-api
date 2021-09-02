@@ -20,7 +20,7 @@ export class UserNotLoggedInError extends Error {
 // fetcher for DBPool
 export const getDBContext = (req?: Request) => {
   // return { user: "testuser1", password: "pg" };
-  //return { user: "postgres", password: "pg" };
+  // return { user: "postgres", password: "pg" };
   return { user: "nshsodqdoimnqo" };
 };
 
@@ -105,13 +105,13 @@ export class Api {
 
   // Generic GET handler
   public GET = (
-    url: string, 
-    handler: (req: Request) => any, 
+    url: string,
+    handler: (req: Request) => any,
     responser?: (req: Request, res: Response, resData: any) => any
   ) => {
     this.app.get(this.getUrl(url), async (req: Request, res: Response) => {
-      //res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
-   		//res.setHeader("Access-Control-Allow-Origin", "*");
+      // res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+   		// res.setHeader("Access-Control-Allow-Origin", "*");
       let responseData = {};
       try {
         const data = await handler(req);
@@ -164,7 +164,7 @@ export class Api {
 
   // Generic POST handler
   public POST = (
-    url: string, 
+    url: string,
     handler: (req: Request) => any,
     responser?: (req: Request, res: Response, resData: any) => any
   ) => {
@@ -221,7 +221,7 @@ export class Api {
 
   // Generic PUT handler
   public PUT = (
-    url: string, 
+    url: string,
     handler: (req: Request) => any,
     responser?: (req: Request, res: Response, resData: any) => any
   ) => {
@@ -280,7 +280,7 @@ export class Api {
 
   // Generic DELETE handler
   public DELETE = (
-    url: string, 
+    url: string,
     handler: (req: Request) => any,
     responser?: (req: Request, res: Response, resData: any) => any
   ) => {

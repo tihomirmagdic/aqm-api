@@ -26,6 +26,8 @@ const initOptions = {
         obj.devicetypes = new repos_1.DeviceTypesRepository(obj, pgp);
         obj.configurations = new repos_1.ConfigurationsRepository(obj, pgp);
         obj.configurationitems = new repos_1.ConfigurationItemsRepository(obj, pgp);
+        obj.filters = new repos_1.FiltersRepository(obj, pgp);
+        obj.filteritems = new repos_1.FilterItemsRepository(obj, pgp);
         obj.regiontypes = new repos_1.RegionTypesRepository(obj, pgp);
         obj.regions = new repos_1.RegionsRepository(obj, pgp);
         obj.owners = new repos_1.OwnersRepository(obj, pgp);
@@ -40,7 +42,7 @@ const initOptions = {
 const pgp = pgPromise(initOptions);
 exports.pgp = pgp;
 // Creating the database instance with extensions:
-//console.log("dbConfig:", dbConfig);
+// console.log("dbConfig:", dbConfig);
 const db = pgp(db_config_1.dbConfig);
 exports.db = db;
 // Initializing optional diagnostics:
@@ -49,7 +51,7 @@ class DBPool {
     constructor() {
         this.pool = new Map();
         this.get = (ct) => {
-            //console.log("pool:", this.pool);
+            // console.log("pool:", this.pool);
             return db;
             /*
             const dbKey = this.key(ct);

@@ -2,6 +2,8 @@ import { CacheRepository } from './cache';
 import { DeviceTypesRepository } from './devicetypes';
 import { ConfigurationsRepository } from './configurations';
 import { ConfigurationItemsRepository } from './configurationitems';
+import { FiltersRepository } from './filters';
+import { FilterItemsRepository } from './filteritems';
 import { RegionTypesRepository } from './regiontypes';
 import { RegionsRepository } from './regions';
 import { OwnersRepository } from './owners';
@@ -17,6 +19,8 @@ interface IExtensions {
   devicetypes: DeviceTypesRepository,
   configurations: ConfigurationsRepository,
   configurationitems: ConfigurationItemsRepository,
+  filters: FiltersRepository,
+  filteritems: FilterItemsRepository,
   regiontypes: RegionTypesRepository,
   regions: RegionsRepository,
   owners: OwnersRepository,
@@ -33,6 +37,8 @@ export {
 	DeviceTypesRepository,
 	ConfigurationsRepository,
 	ConfigurationItemsRepository,
+	FiltersRepository,
+	FilterItemsRepository,
 	RegionTypesRepository,
 	RegionsRepository,
 	OwnersRepository,

@@ -1,4 +1,4 @@
-insert into airq.configurations
+insert into airq.filteritems
   (${values:name})
   values(${values:csv})
 	${returning:raw}

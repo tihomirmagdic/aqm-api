@@ -7,41 +7,45 @@ import { checkModifiedIDs } from "../../server/handler";
 
 import * as Joi from "@hapi/joi";
 
-import { shID } from "../../server/default-schemas";
-
-// id, email, name, created, password, admin, enabled, groupowner
+// filter, sensor, value, min_max,
 
 // schemas
-export const shOwnersCreate = Joi.object().keys({
-  email: Joi.string().email().required(),
-  name: Joi.string().required(),
-  password: Joi.string().required(),
-  admin: Joi.boolean().default(false),
-  enabled: Joi.boolean().default(true),
-  groupowner: Joi.boolean().default(false)
+export const shFilterItemsID = Joi.object().keys({
+  filter: Joi.number().required(),
+  sensor: Joi.string().required(),
 });
 
-export const shOwnersValues = Joi.object().keys({
-  email: Joi.string().email(),
-  name: Joi.string(),
-  password: Joi.string(),
-  admin: Joi.boolean(),
-  enabled: Joi.boolean(),
-  groupowner: Joi.boolean()
+export const shFilterItemsCreate = Joi.object().keys({
+  filter: Joi.number().required(),
+  sensor: Joi.string().required(),
+  value: Joi.number().required(),
+  min_max: Joi.string().required(),
 });
 
-export const shOwnersUpdate = Joi.object().keys({
-  ids: Joi.array().items(shID).required(),
-  values: shOwnersValues.required(),
+export const shFilterItemsValues = Joi.object().keys({
+  filter: Joi.number(),
+  sensor: Joi.string(),
+  value: Joi.number(),
+  min_max: Joi.string(),
 });
 
-const sql = sqlProvider.owners;
+export const shFilterItemsIds = Joi.object().keys({
+  ids: Joi.array().items(shFilterItemsID).required(),
+});
 
-export class OwnersRepository {
+export const shFilterItemsUpdate = Joi.object().keys({
+  ids: Joi.array().items(shFilterItemsID).required(),
+  values: shFilterItemsValues.required(),
+});
+
+const sql = sqlProvider.filteritems;
+
+export class FilterItemsRepository {
   private db: IDatabase<any>;
+
   private pgp: IMain;
-  private keys: string[] = ["id"];
-  private secureColumns: string = "id, email, name, created, admin, enabled, groupowner"; // all except password and salt
+
+  private keys: string[] = ["filter", "sensor"];
 
   constructor(db: any, pgp: any) {
     this.db = db;
@@ -52,23 +56,25 @@ export class OwnersRepository {
     return this.db.any(sql.getAll);
   }
 
+  public getByFilter(filter: any) {
+    return this.db.any(sql.getByFilter, { filter });
+  }
+
   public getByIDs(where: any) {
     return this.db.any(sql.getByIDs, { where });
   }
 
   public add(type: string, values: any): any {
-    // console.log("type:", type);
-    // console.log("values:", values);
     const colValues = this.pgp.helpers.values(values);
     const dbcall = type === "fast" ? this.db.none : this.db.one;
-    const returning = type === "full" ? `returning ${this.secureColumns}` : type === "id" ? "returning " + this.keys.join(", ") : "";
+    const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
     return dbcall(sql.add, { values, colValues, returning });
   }
 
   public update(type: string, data: any): any {
     const where = data.ids;
     const set = this.pgp.helpers.sets(data.values);
-    const returning = type === "full" ? `returning ${this.secureColumns}` : "";
+    const returning = type === "full" ? "returning *" : "";
     if (type === "full") {
       return this.db.any(sql.update, { set, where, returning });
     } else {

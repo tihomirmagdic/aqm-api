@@ -1,4 +1,4 @@
-//export const passport = require('passport');
+// export const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const FacebookStrategy = require('passport-facebook');
 const LocalStrategy = require('passport-local');
@@ -17,18 +17,18 @@ export const setup = (app: any, passport: any) => {
     // Cookie Options
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }))
-  
+
 	app.use(passport.initialize());
 	app.use(passport.session());
 
   passport.serializeUser((user: any, done: any) => {
     done(null, user);
   });
-  
+
   passport.deserializeUser((user: any, done: any) => {
     done(null, user);
   });
-  
+
   const fetchUser = async (data: any, done: any) => {
     console.log("data:", data);
     try {
@@ -51,7 +51,7 @@ export const setup = (app: any, passport: any) => {
     clientID: google.clientID,
     clientSecret: google.clientSecret,
     callbackURL: "/api/v1/auth/google/redirect",
-    //callbackURL: "localhost:4200/auth",
+    // callbackURL: "localhost:4200/auth",
     passReqToCallback: true
   },
     (req: any, accessToken: string, refreshToken: string, profile: any, done: any) => {
@@ -92,8 +92,8 @@ export const setup = (app: any, passport: any) => {
     async (req: any, email: string, password: string, done: any) => {
       console.log("local passport callback:", email + "/" + password);
       const data = {
-        email: email,
-        password: password
+        email,
+        password
       };
       console.log("data:", data);
       try {

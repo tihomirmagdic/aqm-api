@@ -5,13 +5,15 @@ const default_schemas_1 = require("./default-schemas");
 const devicetypes_1 = require("../db/repos/devicetypes");
 const configurations_1 = require("../db/repos/configurations");
 const configurationitems_1 = require("../db/repos/configurationitems");
+const filters_1 = require("../db/repos/filters");
+const filteritems_1 = require("../db/repos/filteritems");
 const regiontypes_1 = require("../db/repos/regiontypes");
 const regions_1 = require("../db/repos/regions");
 const owners_1 = require("../db/repos/owners");
 const firmwares_1 = require("../db/repos/firmwares");
 const devices_1 = require("../db/repos/devices");
 const data_1 = require("../db/repos/data");
-//import { passport } from "../db/repos/passport-setup";
+// import { passport } from "../db/repos/passport-setup";
 const passport = require('passport');
 const passport_setup_1 = require("../db/repos/passport-setup");
 exports.defineRoutes = (app, config) => {
@@ -43,7 +45,7 @@ exports.defineRoutes = (app, config) => {
     // remove configuration(s)
     routes.dbDELETE("/config", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDsAsText)]), (db, values) => db.configurations.delete(values[0].ids));
     //////////////////////////////////////////////
-    // Configurations REST API
+    // Configuration items REST API
     //////////////////////////////////////////////
     // get all configuration items
     routes.dbGET("/config-items", null, (db) => db.configurationitems.get());
@@ -57,6 +59,34 @@ exports.defineRoutes = (app, config) => {
     routes.dbPUT("/config-items/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeUpdate), handler_1.valid(req.body, configurationitems_1.shConfigurationItemsUpdate)]), (db, values) => db.configurationitems.update(values[0].type, values[1]));
     // remove configuration item(s)
     routes.dbDELETE("/config-items", (req) => handler_1.multiValidator([handler_1.valid(req.body, configurationitems_1.shConfigurationItemsIds)]), (db, values) => db.configurationitems.delete(values[0].ids));
+    //////////////////////////////////////////////
+    // Filters REST API
+    //////////////////////////////////////////////
+    // get all filters
+    routes.dbGET("/filters", null, (db) => db.filters.get());
+    // get filters by IDs
+    routes.dbPOST("/filters", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDs)]), (db, values) => db.filters.getByIDs(values[0].ids));
+    // create new filter
+    routes.dbPOST("/filters/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filters_1.shFiltersCreate)]), (db, values) => db.filters.add(values[0].type, values[1]));
+    // update filter(s)
+    routes.dbPUT("/filters/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeUpdate), handler_1.valid(req.body, filters_1.shFiltersUpdate)]), (db, values) => db.filters.update(values[0].type, values[1]));
+    // remove filter(s)
+    routes.dbDELETE("/filters", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDs)]), (db, values) => db.filters.delete(values[0].ids));
+    //////////////////////////////////////////////
+    // Filter items REST API
+    //////////////////////////////////////////////
+    // get all filter items
+    routes.dbGET("/filter-items", null, (db) => db.filteritems.get());
+    // get filter items by filter
+    routes.dbGET("/filter-items/:id", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shText)]), (db, values) => db.filteritems.getByFilter(values[0].id));
+    // get filter items by IDs
+    routes.dbPOST("/filter-items", (req) => handler_1.multiValidator([handler_1.valid(req.body, filteritems_1.shFilterItemsIds)]), (db, values) => db.filteritems.getByIDs(values[0].ids));
+    // create new filter item
+    routes.dbPOST("/filter-items/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filteritems_1.shFilterItemsCreate)]), (db, values) => db.filteritems.add(values[0].type, values[1]));
+    // update filter item(s)
+    routes.dbPUT("/filter-items/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeUpdate), handler_1.valid(req.body, filteritems_1.shFilterItemsUpdate)]), (db, values) => db.filteritems.update(values[0].type, values[1]));
+    // remove filter item(s)
+    routes.dbDELETE("/filter-items", (req) => handler_1.multiValidator([handler_1.valid(req.body, filteritems_1.shFilterItemsIds)]), (db, values) => db.filteritems.delete(values[0].ids));
     //////////////////////////////////////////////
     // Region types REST API
     //////////////////////////////////////////////
@@ -108,28 +138,28 @@ exports.defineRoutes = (app, config) => {
     };
     app.get("/api/v1/auth/test", (req, res) => {
         if (req.user) {
-            //res.send("user " + req.user.email + " logged in");
+            // res.send("user " + req.user.email + " logged in");
             res.status(200).json({ currentuser: { name: req.user.name, email: req.user.email, admin: req.user.admin }, success: true });
         }
         else {
-            //res.send("user not logged in");
-            res.status(401).end('Unauthorized'); //.send("user not logged in");
+            // res.send("user not logged in");
+            res.status(401).end('Unauthorized'); // .send("user not logged in");
         }
     });
     app.get("/api/v1/auth/currentuser", (req, res) => {
         if (req.user) {
-            //res.send("user " + req.user.email + " logged in");
+            // res.send("user " + req.user.email + " logged in");
             res.status(200).json({ currentuser: { name: req.user.name, email: req.user.email, admin: req.user.admin }, success: true });
         }
         else {
-            //res.send("user not logged in");
-            res.status(401).end('Unauthorized'); //.send("user not logged in");
+            // res.send("user not logged in");
+            res.status(401).end('Unauthorized'); // .send("user not logged in");
         }
     });
     // login - type is google, facebook
     // routes.dbPOST(["/auth/:type", "/login/:type"]
     app.get("/aapi/v1/auth/google", (req, res, next) => {
-        //res.setHeader("Access-Control-Allow-Origin", "*");
+        // res.setHeader("Access-Control-Allow-Origin", "*");
         next();
     }, passport.authenticate('google', { scope: ['email', 'profile'] }));
     app.get("/api/v1/auth/google", passport.authenticate('google', { scope: ['email', 'profile'] }), (req, res) => {
@@ -154,21 +184,21 @@ exports.defineRoutes = (app, config) => {
         res.status(200).json({ user: { name: req.user.name, email: req.user.email, admin: req.user.admin }, success: true });
     });
     app.get("/api/v1/auth/google/redirect", passport.authenticate('google'), (req, res) => {
-        //res.send("google auth redirected");
+        // res.send("google auth redirected");
         res.redirect("http://localhost:4200/auth");
-        //res.status(200).json(req.user);
+        // res.status(200).json(req.user);
     });
     app.get("/api/v1/auth/facebook/redirect", passport.authenticate('facebook'), (req, res) => {
-        //res.send("facebook auth redirected");
+        // res.send("facebook auth redirected");
         res.redirect("http://localhost:4200/auth");
-        //res.status(200).json(req.user);
+        // res.status(200).json(req.user);
     });
     app.delete("/api/v1/auth", (req, res) => {
         console.log("before logout");
         if (req.logout) {
             console.log("user logged out");
             req.logout();
-            //res.clearCookie('access_token');
+            // res.clearCookie('access_token');
         }
         console.log("after logout");
         res.status(200).json({ success: true });

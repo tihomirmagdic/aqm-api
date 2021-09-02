@@ -18,7 +18,7 @@ exports.UserNotLoggedInError = UserNotLoggedInError;
 // fetcher for DBPool
 exports.getDBContext = (req) => {
     // return { user: "testuser1", password: "pg" };
-    //return { user: "postgres", password: "pg" };
+    // return { user: "postgres", password: "pg" };
     return { user: "nshsodqdoimnqo" };
 };
 exports.valid = (params, schema, options) => ({
@@ -78,8 +78,8 @@ class Api {
         // Generic GET handler
         this.GET = (url, handler, responser) => {
             this.app.get(this.getUrl(url), async (req, res) => {
-                //res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
-                //res.setHeader("Access-Control-Allow-Origin", "*");
+                // res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+                // res.setHeader("Access-Control-Allow-Origin", "*");
                 let responseData = {};
                 try {
                     const data = await handler(req);

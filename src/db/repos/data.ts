@@ -49,7 +49,7 @@ export const shshTypeCreateData = Joi.object().keys({
 });
 
 export const shDataCreate = Joi.object().keys({
-  //device: Joi.number().required(),
+  // device: Joi.number().required(),
   pm10: Joi.number(),
   pm2_5: Joi.number(),
   so2: Joi.number(),
@@ -164,11 +164,11 @@ export class DataRepository {
     const aFields = values.sensors;
     /*
     this.replaceFields(aFields,
-      ["gps", "temp", "battery", "humidity", "pm10", "pm2_5"], 
+      ["gps", "temp", "battery", "humidity", "pm10", "pm2_5"],
       ["point(st_x(gps), st_y(gps)) gps", "temp::float", "battery || '%' battery", "humidity || '%' humidity", "pm10::float + 0.1 pm10", "pm2_5::float + 0.01 pm2_5"]);
     */
-    //this.replaceAllFieldsRule(aFields, aFields, '', '::float', ["gps", "measured", "battery", "humidity"]);
-    //this.replaceAllFieldsRule(aFields, ["battery", "humidity"], '', ` || '%'`, []);
+    // this.replaceAllFieldsRule(aFields, aFields, '', '::float', ["gps", "measured", "battery", "humidity"]);
+    // this.replaceAllFieldsRule(aFields, ["battery", "humidity"], '', ` || '%'`, []);
     this.replaceField(aFields, "gps", "array[st_x(gps), st_y(gps)] gps");
     const fields = `\n\t${aFields.join(", ")}\n`;
 
@@ -247,7 +247,7 @@ export class DataRepository {
         lastPage = !(data.length > config.pageSize)
         data = data.slice(limit - 1)
     */
-    
+
     /*
     console.log("config:", config);
     console.log("page:", page);

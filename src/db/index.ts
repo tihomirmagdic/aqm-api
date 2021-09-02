@@ -9,6 +9,8 @@ import {
   DeviceTypesRepository,
   ConfigurationsRepository,
   ConfigurationItemsRepository,
+  FiltersRepository,
+  FilterItemsRepository,
   RegionTypesRepository,
   RegionsRepository,
   OwnersRepository,
@@ -37,6 +39,8 @@ const initOptions: IInitOptions<IExtensions> = {
     obj.devicetypes = new DeviceTypesRepository(obj, pgp);
     obj.configurations = new ConfigurationsRepository(obj, pgp);
     obj.configurationitems = new ConfigurationItemsRepository(obj, pgp);
+    obj.filters = new FiltersRepository(obj, pgp);
+    obj.filteritems = new FilterItemsRepository(obj, pgp);
     obj.regiontypes = new RegionTypesRepository(obj, pgp);
     obj.regions = new RegionsRepository(obj, pgp);
     obj.owners = new OwnersRepository(obj, pgp);
@@ -54,7 +58,7 @@ export type DB = IDatabase<IExtensions> & IExtensions;
 const pgp: IMain = pgPromise(initOptions);
 
 // Creating the database instance with extensions:
-//console.log("dbConfig:", dbConfig);
+// console.log("dbConfig:", dbConfig);
 const db: ExtendedProtocol = pgp(dbConfig);
 
 // Initializing optional diagnostics:
@@ -69,7 +73,7 @@ class DBPool {
   private pool = new Map();
 
   public get = (ct: any): DB => {
-    //console.log("pool:", this.pool);
+    // console.log("pool:", this.pool);
     return db;
     /*
     const dbKey = this.key(ct);

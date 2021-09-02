@@ -1,9 +1,8 @@
-update airq.devicetypes
-set ${set:raw}
+select * from airq.filters
 where
   (id) in
     (
-      select (c->>'id') from
+      select (c->>'id')::int4 from
         (
           select unnest(${where:raw})::json c
         ) x

@@ -24,9 +24,9 @@ export const shAuthCreateLocal = Joi.object().keys({
 const sql = sqlProvider.auth;
 
 export class AuthRepository {
-  private db: IDatabase<IExtensions> & IExtensions;//IDatabase<any>;
+  private db: IDatabase<IExtensions> & IExtensions;// IDatabase<any>;
   private pgp: IMain;
-  //private keys: string[] = ["id"];
+  // private keys: string[] = ["id"];
 
   constructor(db: any, pgp: any) {
     this.db = db;
@@ -83,15 +83,15 @@ export class AuthRepository {
     console.log("google auth");
     const id = await this.db.any(sql.checkEmail, { id: credentials.googleId });
     if (!id.length) {
-      //create user
+      // create user
     } else {
-      //user found
+      // user found
     }
-    //return passport.authenticate("google", { scope: ["profile"] });
+    // return passport.authenticate("google", { scope: ["profile"] });
   }
 
   public delete() {
     console.log("provider logout");
-    //return this.db.result(sql.remove, { where }, (r: IResult) => ({ deleted: r.rowCount }));
+    // return this.db.result(sql.remove, { where }, (r: IResult) => ({ deleted: r.rowCount }));
   }
 }

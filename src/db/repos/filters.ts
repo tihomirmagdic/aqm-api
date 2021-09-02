@@ -9,39 +9,34 @@ import * as Joi from "@hapi/joi";
 
 import { shID } from "../../server/default-schemas";
 
-// id, email, name, created, password, admin, enabled, groupowner
+// id, name, enabled, action
 
 // schemas
-export const shOwnersCreate = Joi.object().keys({
-  email: Joi.string().email().required(),
+export const shFiltersCreate = Joi.object().keys({
+  //id: Joi.number().required(),
   name: Joi.string().required(),
-  password: Joi.string().required(),
-  admin: Joi.boolean().default(false),
-  enabled: Joi.boolean().default(true),
-  groupowner: Joi.boolean().default(false)
-});
-
-export const shOwnersValues = Joi.object().keys({
-  email: Joi.string().email(),
-  name: Joi.string(),
-  password: Joi.string(),
-  admin: Joi.boolean(),
   enabled: Joi.boolean(),
-  groupowner: Joi.boolean()
+  action: Joi.string(),
 });
 
-export const shOwnersUpdate = Joi.object().keys({
+export const shFiltersValues = Joi.object().keys({
+  //id: Joi.number(),
+  name: Joi.string(),
+  enabled: Joi.boolean(),
+  action: Joi.string(),
+});
+
+export const shFiltersUpdate = Joi.object().keys({
   ids: Joi.array().items(shID).required(),
-  values: shOwnersValues.required(),
+  values: shFiltersValues.required(),
 });
 
-const sql = sqlProvider.owners;
+const sql = sqlProvider.filters;
 
-export class OwnersRepository {
+export class FiltersRepository {
   private db: IDatabase<any>;
   private pgp: IMain;
   private keys: string[] = ["id"];
-  private secureColumns: string = "id, email, name, created, admin, enabled, groupowner"; // all except password and salt
 
   constructor(db: any, pgp: any) {
     this.db = db;
@@ -57,18 +52,16 @@ export class OwnersRepository {
   }
 
   public add(type: string, values: any): any {
-    // console.log("type:", type);
-    // console.log("values:", values);
     const colValues = this.pgp.helpers.values(values);
     const dbcall = type === "fast" ? this.db.none : this.db.one;
-    const returning = type === "full" ? `returning ${this.secureColumns}` : type === "id" ? "returning " + this.keys.join(", ") : "";
+    const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
     return dbcall(sql.add, { values, colValues, returning });
   }
 
   public update(type: string, data: any): any {
     const where = data.ids;
     const set = this.pgp.helpers.sets(data.values);
-    const returning = type === "full" ? `returning ${this.secureColumns}` : "";
+    const returning = type === "full" ? "returning *" : "";
     if (type === "full") {
       return this.db.any(sql.update, { set, where, returning });
     } else {

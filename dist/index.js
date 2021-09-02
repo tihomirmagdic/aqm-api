@@ -86,11 +86,11 @@ app.use((error, req, res, next) => {
     }
     console.error(error.stack);
     res.status(400).end();
-    //res.status(400).send('Bad request')
+    // res.status(400).send('Bad request')
 });
 const server = app.listen(port, () => {
     console.log(
-    //"\nReady for GET and other requests on http://localhost:" + port;
+    // "\nReady for GET and other requests on http://localhost:" + port;
     "\nReady for GET and other requests on http://" + os.hostname() + ":" + port);
 });
 //# sourceMappingURL=index.js.map

@@ -52,11 +52,11 @@ app.use(cors(options));
 
 app.use((req: any, res: any, next: any) => {
   req.headers['content-type'] = 'application/json';
-  
+
   if (req.headers['X-prevent-preflight']) {
     req.headers['Content-type'] = req.headers['X-preflight-content-type'];
   }
-  
+
   next();
 });
 
@@ -94,12 +94,12 @@ app.use((error: ResponseError, req: any, res: any, next: any) => {
   }
   console.error(error.stack);
   res.status(400).end();
-  //res.status(400).send('Bad request')
+  // res.status(400).send('Bad request')
 });
 
 const server = app.listen(port, () => {
   console.log(
-    //"\nReady for GET and other requests on http://localhost:" + port;
+    // "\nReady for GET and other requests on http://localhost:" + port;
     "\nReady for GET and other requests on http://" + os.hostname() + ":" + port
   );
 });

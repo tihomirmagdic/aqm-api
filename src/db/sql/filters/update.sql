@@ -1,4 +1,4 @@
-update airq.owners
+update airq.filters
 set ${set:raw}
 where
   (id) in
@@ -8,3 +8,4 @@ where
           select unnest(${where:raw})::json c
         ) x
     )
+	${returning:raw}

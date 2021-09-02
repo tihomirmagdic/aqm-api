@@ -62,7 +62,7 @@ export class RegionsRepository {
       new this.pgp.helpers.Column({ name: key, skip: (c: any) => !c.exists })
     );
   }
-  
+
   public get() {
     return this.db.any(sql.getAll);
   }
@@ -72,13 +72,13 @@ export class RegionsRepository {
   }
 
   public add(type: string, values: any): any {
-    //console.log("regions add0: ", values);
+    // console.log("regions add0: ", values);
     values.coordinates = preparePolygonValues(values.coordinates);
     const cols = this.existingCols(values, RegionsRepository.cs.insert);
-    //console.log("values:", values);
-    //console.log("cols:", cols);
+    // console.log("values:", values);
+    // console.log("cols:", cols);
     const colValues = this.pgp.helpers.values(values, cols);
-    //console.log("colValues:", colValues);
+    // console.log("colValues:", colValues);
 
     const dbcall = type === "fast" ? this.db.none : this.db.one;
     const returning = type === "full" ? "returning id, type, name, gtype, (ST_AsGeoJSON(coordinates)::json->>'coordinates')::json coordinates"
@@ -118,7 +118,7 @@ export class RegionsRepository {
         mod: ":raw", // optional
         init: (params: any) => {
           console.log("cs: params: ", params);
-          //return this.pgp.as.format(`point(${params.value.x}, ${params.value.y})`);
+          // return this.pgp.as.format(`point(${params.value.x}, ${params.value.y})`);
           const c = { type: params.source.gtype, coordinates: [params.source.coordinates] };
           return "ST_SetSRID(ST_GeomFromGeoJSON('" + JSON.stringify(c) + "'::json), 4326)";
 
@@ -126,7 +126,7 @@ export class RegionsRepository {
             console.log("pt:", pt, this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`));
             return this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${pt[0]}, ${pt[1]}), 4326)`);
           }).join(", ") + "]))";
-          //return this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${params.value.x}, ${params.value.y}), 4326)`);
+          // return this.pgp.as.format(`ST_SetSRID(ST_MakePoint(${params.value.x}, ${params.value.y}), 4326)`);
         }
       });
       cs.insert = new helpers.ColumnSet(colPosition);

@@ -34,7 +34,7 @@ const sql = sqlProvider.devicetypes;
 class DeviceTypesRepository {
     constructor(db, pgp) {
         this.keys = ["id"];
-        //console.log("DeviceTypes constructor:");
+        // console.log("DeviceTypes constructor:");
         this.db = db;
         this.pgp = pgp;
     }

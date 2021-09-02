@@ -1,4 +1,4 @@
-select * from airq.owners
+delete from airq.filters
 where
   (id) in
     (

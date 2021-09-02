@@ -1,1 +1,0 @@
-select apikey from airq.devices where enabled

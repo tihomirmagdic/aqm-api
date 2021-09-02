@@ -53,16 +53,16 @@ export class DevicesRepository {
   private keys: string[] = ["id"];
 
   constructor(db: any, pgp: any) {
-    //console.log("Device constructor:");
+    // console.log("Device constructor:");
     this.db = db;
     this.pgp = pgp;
   }
 
   public get() {
-    //return { a: "b" };
-    //console.log("before GET:", sql.getAll);
-    //console.log("db.$cn:", this.db.$cn);
-    //console.log("db.$config:", this.db.$config);
+    // return { a: "b" };
+    // console.log("before GET:", sql.getAll);
+    // console.log("db.$cn:", this.db.$cn);
+    // console.log("db.$config:", this.db.$config);
     return this.db.any(sql.getAll);
   }
 

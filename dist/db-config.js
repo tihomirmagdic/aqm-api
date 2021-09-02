@@ -33,14 +33,14 @@ exports.dbConfig = (process.env.PG_LOCAL && process.env.PG_LOCAL.toLowerCase() =
     ssl: { rejectUnauthorized: false }
 };
 const dbConfig0 = {
-    //connectionString: process.env.DATABASE_URL, // ||
-    //connectionString: 
+    // connectionString: process.env.DATABASE_URL, // ||
+    // connectionString:
     //  "postgres://nshsodqdoimnqo:9ba94ac902fa70628a04020137a5b91b9d9172b751b3b40e65daaf4864d4ca46@ec2-52-86-116-94.compute-1.amazonaws.com:5432/d9o5v8kne8u0su",
-    //connectionString:
+    // connectionString:
     //    process.env.DATABASE_URL +
     //  "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",
-    //"postgres://nshsodqdoimnqo:9ba94ac902fa70628a04020137a5b91b9d9172b751b3b40e65daaf4864d4ca46@ec2-52-86-116-94.compute-1.amazonaws.com:5432/d9o5v8kne8u0su?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",
-    //"postgres://nshsodqdoimnqo:9ba94ac902fa70628a04020137a5b91b9d9172b751b3b40e65daaf4864d4ca46@ec2-52-86-116-94.compute-1.amazonaws.com:5432/d9o5v8kne8u0su",
+    // "postgres://nshsodqdoimnqo:9ba94ac902fa70628a04020137a5b91b9d9172b751b3b40e65daaf4864d4ca46@ec2-52-86-116-94.compute-1.amazonaws.com:5432/d9o5v8kne8u0su?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",
+    // "postgres://nshsodqdoimnqo:9ba94ac902fa70628a04020137a5b91b9d9172b751b3b40e65daaf4864d4ca46@ec2-52-86-116-94.compute-1.amazonaws.com:5432/d9o5v8kne8u0su",
     host: (process.env.PG_LOCAL && process.env.PG_LOCAL.toLowerCase() === "true") ? "localhost" : process.env.PG_HOST,
     port: (process.env.PG_LOCAL && process.env.PG_LOCAL.toLowerCase() === "true") ? 5432 : (process.env.PG_PORT ? +process.env.PG_PORT : 5432),
     database: (process.env.PG_LOCAL && process.env.PG_LOCAL.toLowerCase() === "true") ? "postgres" : process.env.PG_DATABASE,
@@ -51,7 +51,7 @@ const dbConfig0 = {
     ssl: {
       rejectUnauthorized: false
     },
-    
+  
     port: 5432,
     host: "ec2-52-86-116-94.compute-1.amazonaws.com",
     database: "d9o5v8kne8u0su",
