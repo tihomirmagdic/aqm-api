@@ -8,19 +8,21 @@ import { checkModifiedIDs } from "../../server/handler";
 import * as Joi from "@hapi/joi";
 
 import { shID } from "../../server/default-schemas";
+import { shSensors, shTimeFrame, shLocations } from "./data";
 
 // id, name, enabled, action
 
 // schemas
 export const shFiltersCreate = Joi.object().keys({
-  //id: Joi.number().required(),
   name: Joi.string().required(),
   enabled: Joi.boolean(),
   action: Joi.string(),
+  sensors: Joi.array().items(shSensors).required(),
+  time: shTimeFrame.required(),
+  locations: shLocations.required(),
 });
 
 export const shFiltersValues = Joi.object().keys({
-  //id: Joi.number(),
   name: Joi.string(),
   enabled: Joi.boolean(),
   action: Joi.string(),

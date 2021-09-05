@@ -13,7 +13,7 @@ import * as Joi from "@hapi/joi";
 
 export const shTypeCreateData = Joi.string().required().valid("full", "fast");
 
-const shSensors = Joi.string()
+export const shSensors = Joi.string()
   .required()
   .valid(
     "pm10",
@@ -32,6 +32,7 @@ const shSensors = Joi.string()
     "measured",
     "aqi"
   );
+
 const thDate = Joi.object()
   .keys({
     date: Joi.date(),
@@ -39,7 +40,7 @@ const thDate = Joi.object()
   })
   .xor("date", "interval");
 
-const shTimeFrame = Joi.object().keys({
+export const shTimeFrame = Joi.object().keys({
   from: thDate.required(),
   to: thDate,
 });
@@ -77,7 +78,7 @@ const shCircle = Joi.object().keys({
   radius: Joi.number().required(),
 });
 
-const shLocations = Joi.object()
+export const shLocations = Joi.object()
   .keys({
     devices: Joi.array().items(Joi.number()),
     owner: Joi.boolean().allow(true),

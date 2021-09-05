@@ -14,7 +14,7 @@ const Joi = __importStar(require("@hapi/joi"));
 // device, pm10, pm2_5, so2, co, o3, pb, hc, voc, temp, humidity, pressure, gps, battery, measured, received, aqi
 // schemas
 exports.shTypeCreateData = Joi.string().required().valid("full", "fast");
-const shSensors = Joi.string()
+exports.shSensors = Joi.string()
     .required()
     .valid("pm10", "pm2_5", "so2", "co", "o3", "pb", "hc", "voc", "temp", "humidity", "pressure", "gps", "battery", "measured", "aqi");
 const thDate = Joi.object()
@@ -23,7 +23,7 @@ const thDate = Joi.object()
     interval: Joi.string().isoDuration(),
 })
     .xor("date", "interval");
-const shTimeFrame = Joi.object().keys({
+exports.shTimeFrame = Joi.object().keys({
     from: thDate.required(),
     to: thDate,
 });
@@ -54,7 +54,7 @@ const shCircle = Joi.object().keys({
     center: Joi.array().items(regions_1.shNumber).length(2).required(),
     radius: Joi.number().required(),
 });
-const shLocations = Joi.object()
+exports.shLocations = Joi.object()
     .keys({
     devices: Joi.array().items(Joi.number()),
     owner: Joi.boolean().allow(true),
@@ -64,9 +64,9 @@ const shLocations = Joi.object()
 })
     .xor("devices", "owner", "name", "polygon", "circle");
 exports.shDataRetreive = Joi.object().keys({
-    sensors: Joi.array().items(shSensors).required(),
-    time: shTimeFrame.required(),
-    locations: shLocations,
+    sensors: Joi.array().items(exports.shSensors).required(),
+    time: exports.shTimeFrame.required(),
+    locations: exports.shLocations,
     order: Joi.array().items(Joi.string()),
     limit: Joi.number(),
 });
