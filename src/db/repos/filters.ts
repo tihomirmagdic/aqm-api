@@ -26,6 +26,9 @@ export const shFiltersValues = Joi.object().keys({
   name: Joi.string(),
   enabled: Joi.boolean(),
   action: Joi.string(),
+  sensors: Joi.array().items(shSensors),
+  time: shTimeFrame,
+  locations: shLocations,
 });
 
 export const shFiltersUpdate = Joi.object().keys({
@@ -61,6 +64,10 @@ export class FiltersRepository {
   }
 
   public update(type: string, data: any): any {
+    if(data.values.sensors) {
+      data.values.sensors = JSON.stringify(data.values.sensors); // explicit converts array to json
+    }
+
     const where = data.ids;
     const set = this.pgp.helpers.sets(data.values);
     const returning = type === "full" ? "returning *" : "";
