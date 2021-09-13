@@ -60,21 +60,12 @@ export class FiltersRepository {
 
   public add(type: string, values: any): any {
     const colValues = this.pgp.helpers.values(values);
-    
-    if(values.sensors) {
-      values.sensors = JSON.stringify(values.sensors); // explicit converts array to json
-    }
-    
     const dbcall = type === "fast" ? this.db.none : this.db.one;
     const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
     return dbcall(sql.add, { values, colValues, returning });
   }
 
   public update(type: string, data: any): any {
-    if(data.values.sensors) {
-      data.values.sensors = JSON.stringify(data.values.sensors); // explicit converts array to json
-    }
-
     const where = data.ids;
     const set = this.pgp.helpers.sets(data.values);
     const returning = type === "full" ? "returning *" : "";
