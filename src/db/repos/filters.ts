@@ -60,6 +60,11 @@ export class FiltersRepository {
 
   public add(type: string, values: any): any {
     const colValues = this.pgp.helpers.values(values);
+    
+    if(values.sensors) {
+      values.sensors = JSON.stringify(values.sensors); // explicit converts array to json
+    }
+    
     const dbcall = type === "fast" ? this.db.none : this.db.one;
     const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
     return dbcall(sql.add, { values, colValues, returning });
