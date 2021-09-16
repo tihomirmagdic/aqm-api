@@ -13,20 +13,21 @@ import * as Joi from "@hapi/joi";
 export const shFilterItemsID = Joi.object().keys({
   filter: Joi.number().required(),
   sensor: Joi.string().required(),
+  min_max: Joi.string().valid('min', 'max').required(),
 });
 
 export const shFilterItemsCreate = Joi.object().keys({
   filter: Joi.number().required(),
   sensor: Joi.string().required(),
   value: Joi.number().required(),
-  min_max: Joi.string().required(),
+  min_max: Joi.string().valid('min', 'max').required(),
 });
 
 export const shFilterItemsValues = Joi.object().keys({
   filter: Joi.number(),
   sensor: Joi.string(),
   value: Joi.number(),
-  min_max: Joi.string(),
+  min_max: Joi.string().valid('min', 'max'),
 });
 
 export const shFilterItemsIds = Joi.object().keys({
