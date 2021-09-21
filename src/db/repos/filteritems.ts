@@ -39,6 +39,17 @@ export const shFilterItemsUpdate = Joi.object().keys({
   values: shFilterItemsValues.required(),
 });
 
+export const shFilterItemsMultipleCreate = Joi.array().items(shFilterItemsCreate);
+
+export const shFilterItemsValuesWithKeys = Joi.object().keys({
+  filter: Joi.number().required(),
+  sensor: Joi.string().required(),
+  min_max: Joi.string().valid('min', 'max').required(),
+  value: Joi.number(),
+});
+
+export const shFilterItemsMultipleUpdate = Joi.array().items(shFilterItemsValuesWithKeys);
+
 const sql = sqlProvider.filteritems;
 
 export class FilterItemsRepository {
@@ -46,7 +57,7 @@ export class FilterItemsRepository {
 
   private pgp: IMain;
 
-  private keys: string[] = ["filter", "sensor"];
+  private keys: string[] = ["filter", "sensor", "min_max"];
 
   constructor(db: any, pgp: any) {
     this.db = db;
@@ -67,19 +78,65 @@ export class FilterItemsRepository {
 
   public add(type: string, values: any): any {
     const colValues = this.pgp.helpers.values(values);
-    const dbcall = type === "fast" ? this.db.none : this.db.one;
+    const dbcall = type === "fast" ? this.db.result : this.db.one;
     const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
-    return dbcall(sql.add, { values, colValues, returning });
+    if (type === "fast") {
+      return dbcall(sql.add, { values, colValues, returning }, (r: IResult) => ({ created: r.rowCount }));
+    } else {
+      return dbcall(sql.add, { values, colValues, returning });
+    }
   }
 
   public update(type: string, data: any): any {
     const where = data.ids;
     const set = this.pgp.helpers.sets(data.values);
-    const returning = type === "full" ? "returning *" : "";
-    if (type === "full") {
-      return this.db.any(sql.update, { set, where, returning });
-    } else {
+    const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
+    if (type === "fast") {
       return this.db.result(sql.update, { set, where, returning }, (r: IResult) => ({ updated: r.rowCount }));
+    } else {
+      return this.db.any(sql.update, { set, where, returning });
+    }
+  }
+
+  allSettled(promises: any) {
+    let wrappedPromises = promises.map((p: any) => Promise.resolve(p)
+        .then(
+            val => ({ status: 'fulfilled', value: val }),
+            err => ({ status: 'rejected', reason: err })));
+    return Promise.all(wrappedPromises);
+  }
+
+  public async multipleCreate(type: string, data: any): Promise<any> {
+    const result: any[] = [];
+    data.forEach((values: any) => {
+      result.push(this.add(type, values));
+    });
+    if (type === "fast") {
+      const results = await this.allSettled(result);
+      return { created: results.reduce((prev: number, call: any) => (prev + (call.status === "fulfilled" ? call.value.created : 0)), 0) };
+    }
+    else {
+      return Promise.all(result);
+    }
+  }
+
+  public async multipleUpdate(type: string, data: any): Promise<any> {
+    const result: any[] = [];
+    data.forEach((values: any) => {
+      const ids: any[] = [{}];
+      this.keys.forEach((key: string) => {
+        ids[0][key] = values[key];
+        delete values[key];
+      });
+      result.push(this.update(type, { ids, values}));
+    });
+
+    if (type === "fast") {
+      const results = await this.allSettled(result);
+      return { updated: results.reduce((prev: number, call: any) => (prev + (call.status === "fulfilled" ? call.value.updated : 0)), 0) };
+    }
+    else {
+      return Promise.all(result);
     }
   }
 

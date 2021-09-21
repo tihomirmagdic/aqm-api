@@ -77,7 +77,7 @@ class DBPool {
         };
         this.key = (ct) => {
             // const config = { ...dbConfig, ...ct };
-            const config = Object.assign({}, db_config_1.dbConfig);
+            const config = { ...db_config_1.dbConfig };
             const { host, port, database, user } = config;
             return { config, key: JSON.stringify({ host, port, database, user }) };
         };
