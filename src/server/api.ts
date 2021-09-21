@@ -10,7 +10,7 @@ import { shDictionaryIds, shDictionaryCreate, shDictionaryUpdate } from "../db/r
 import { shConfigurationsCreate, shConfigurationsUpdate } from "../db/repos/configurations";
 import { shConfigurationItemsIds, shConfigurationItemsCreate, shConfigurationItemsUpdate } from "../db/repos/configurationitems";
 import { shFiltersCreate, shFiltersUpdate } from "../db/repos/filters";
-import { shFilterItemsIds, shFilterItemsCreate, shFilterItemsUpdate } from "../db/repos/filteritems";
+import { shFilterItemsIds, shFilterItemsCreate, shFilterItemsMultipleCreate, shFilterItemsUpdate, shFilterItemsMultipleUpdate } from "../db/repos/filteritems";
 import { shRegionTypesCreate, shRegionTypesUpdate } from "../db/repos/regiontypes";
 import { shRegionsCreate, shRegionsUpdate } from "../db/repos/regions";
 import { shOwnersCreate, shOwnersUpdate } from "../db/repos/owners";
@@ -222,10 +222,19 @@ export const defineRoutes = (app: any, config: any) => {
 		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shFilterItemsCreate)]),
 		(db: DB, values: any[]) => db.filteritems.add(values[0].type, values[1]));
 
+	// create new filter item
+	routes.dbPOST("/filter-items/multiple/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shFilterItemsMultipleCreate)]),
+		(db: DB, values: any[]) => db.filteritems.add(values[0].type, values[1]));
+
 	// update filter item(s)
 	routes.dbPUT("/filter-items/:type",
 		(req: Request) => multiValidator([valid(req.params, shDefaultTypeUpdate2), valid(req.body, shFilterItemsUpdate)]),
 		(db: DB, values: any[]) => db.filteritems.update(values[0].type, values[1]));
+
+	routes.dbPUT("/filter-items/multiple/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeUpdate2), valid(req.body, shFilterItemsMultipleUpdate)]),
+		(db: DB, values: any[]) => db.filteritems.multipleUpdate(values[0].type, values[1]));
 
 	// remove filter item(s)
 	routes.dbDELETE("/filter-items",

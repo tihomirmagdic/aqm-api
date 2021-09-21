@@ -39,6 +39,17 @@ export const shFilterItemsUpdate = Joi.object().keys({
   values: shFilterItemsValues.required(),
 });
 
+export const shFilterItemsMultipleCreate = Joi.array().items(shFilterItemsCreate);
+
+export const shFilterItemsValuesWithKeys = Joi.object().keys({
+  filter: Joi.number().required(),
+  sensor: Joi.string().required(),
+  min_max: Joi.string().valid('min', 'max').required(),
+  value: Joi.number(),
+});
+
+export const shFilterItemsMultipleUpdate = Joi.array().items(shFilterItemsValuesWithKeys);
+
 const sql = sqlProvider.filteritems;
 
 export class FilterItemsRepository {
@@ -73,13 +84,54 @@ export class FilterItemsRepository {
   }
 
   public update(type: string, data: any): any {
+    console.log("type:", type);
+    console.log("data:", data);
     const where = data.ids;
     const set = this.pgp.helpers.sets(data.values);
+    console.log("where:", where);
+    console.log("set:", set);
     const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
     if (type === "fast") {
       return this.db.result(sql.update, { set, where, returning }, (r: IResult) => ({ updated: r.rowCount }));
     } else {
       return this.db.any(sql.update, { set, where, returning });
+    }
+  }
+
+  public multipleCreate(type: string, data: any): any {
+    console.log("type:", type);
+    console.log("data:", data);
+    const result: any[] = [];
+    data.forEach((values: any) => {
+      console.log("values:", values);
+      result.push(this.add(type, { values}));
+    });
+    return Promise.all(result);
+  }
+
+  public async multipleUpdate(type: string, data: any): Promise<any> {
+    console.log("type:", type);
+    console.log("data:", data);
+    const result: any[] = [];
+    data.forEach((values: any) => {
+      const ids: any[] = [{}];
+      this.keys.forEach((key: string) => {
+        ids[0][key] = values[key];
+        delete values[key];
+      });
+      console.log("ids:", ids);
+      console.log("values:", values);
+      result.push(this.update(type, { ids, values}));
+    });
+
+    if (type === "fast") {
+      const results = await Promise.all(result);
+      console.log("results:", results);
+      return { updated: results.reduce((prev: number, u: any) => (prev + u.updated), 0) };
+    }
+    else {
+      console.log("not fast");
+      return Promise.all(result);
     }
   }
 
