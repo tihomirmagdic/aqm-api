@@ -112,7 +112,7 @@ exports.defineRoutes = (app, config) => {
     // create new filter item
     routes.dbPOST("/filter-items/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filteritems_1.shFilterItemsCreate)]), (db, values) => db.filteritems.add(values[0].type, values[1]));
     // update filter item(s)
-    routes.dbPUT("/filter-items/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeUpdate), handler_1.valid(req.body, filteritems_1.shFilterItemsUpdate)]), (db, values) => db.filteritems.update(values[0].type, values[1]));
+    routes.dbPUT("/filter-items/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeUpdate2), handler_1.valid(req.body, filteritems_1.shFilterItemsUpdate)]), (db, values) => db.filteritems.update(values[0].type, values[1]));
     // remove filter item(s)
     routes.dbDELETE("/filter-items", (req) => handler_1.multiValidator([handler_1.valid(req.body, filteritems_1.shFilterItemsIds)]), (db, values) => db.filteritems.delete(values[0].ids));
     //////////////////////////////////////////////

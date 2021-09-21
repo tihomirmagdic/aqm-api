@@ -46,7 +46,7 @@ export class FilterItemsRepository {
 
   private pgp: IMain;
 
-  private keys: string[] = ["filter", "sensor"];
+  private keys: string[] = ["filter", "sensor", "min_max"];
 
   constructor(db: any, pgp: any) {
     this.db = db;
@@ -75,11 +75,11 @@ export class FilterItemsRepository {
   public update(type: string, data: any): any {
     const where = data.ids;
     const set = this.pgp.helpers.sets(data.values);
-    const returning = type === "full" ? "returning *" : "";
-    if (type === "full") {
-      return this.db.any(sql.update, { set, where, returning });
-    } else {
+    const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
+    if (type === "fast") {
       return this.db.result(sql.update, { set, where, returning }, (r: IResult) => ({ updated: r.rowCount }));
+    } else {
+      return this.db.any(sql.update, { set, where, returning });
     }
   }
 

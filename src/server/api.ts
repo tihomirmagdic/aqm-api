@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { DB, dbPool } from "../db";
 import { multiValidator, valid, Api } from "./handler";
 
-import { shID, shDefaultIDs, shDefaultIDsAsText, shText, shDefaultTypeCreate, shDefaultTypeUpdate } from "./default-schemas";
+import { shID, shDefaultIDs, shDefaultIDsAsText, shText, shDefaultTypeCreate, shDefaultTypeUpdate, shDefaultTypeUpdate2 } from "./default-schemas";
 
 import { shDeviceTypesCreate, shDeviceTypesUpdate } from "../db/repos/devicetypes";
 import { shTranslationsCreate, shTranslationsUpdate } from "../db/repos/translations";
@@ -224,7 +224,7 @@ export const defineRoutes = (app: any, config: any) => {
 
 	// update filter item(s)
 	routes.dbPUT("/filter-items/:type",
-		(req: Request) => multiValidator([valid(req.params, shDefaultTypeUpdate), valid(req.body, shFilterItemsUpdate)]),
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeUpdate2), valid(req.body, shFilterItemsUpdate)]),
 		(db: DB, values: any[]) => db.filteritems.update(values[0].type, values[1]));
 
 	// remove filter item(s)
