@@ -134,8 +134,7 @@ export class FilterItemsRepository {
     if (type === "fast") {
       const results = await this.allSettled(result);
       return { updated: results.reduce((prev: number, call: any) => (prev + (call.status === "fulfilled" ? call.value.updated : 0)), 0) };
-    }
-    else {
+    } else {
       return Promise.all(result);
     }
   }
