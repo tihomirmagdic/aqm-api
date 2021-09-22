@@ -98,11 +98,16 @@ export class FilterItemsRepository {
     }
   }
 
+  filterProps(obj: any, props: string[]): any {
+    Object.keys(obj).forEach((key: string) => !props.includes(key) ? delete obj[key] : null );
+    return obj;
+  }
+
   allSettled(promises: any) {
     const wrappedPromises = promises.map((p: any) => Promise.resolve(p)
         .then(
-            val => ({ status: 'fulfilled', value: val }),
-            err => ({ status: 'rejected', reason: err })));
+            val => ({ status: "ok", result: val }),
+            err => ({ status: err.name || "rejected", reason: this.filterProps(err, ["code", "detail", "constraint"]) })));
     return Promise.all(wrappedPromises);
   }
 
@@ -111,12 +116,13 @@ export class FilterItemsRepository {
     data.forEach((values: any) => {
       result.push(this.add(type, values));
     });
-    if (type === "fast") {
+    if (type === "xfast") {
       const results = await this.allSettled(result);
       return { created: results.reduce((prev: number, call: any) => (prev + (call.status === "fulfilled" ? call.value.created : 0)), 0) };
     }
     else {
-      return Promise.all(result);
+      return this.allSettled(result);
+      // return Promise.all(result);
     }
   }
 
