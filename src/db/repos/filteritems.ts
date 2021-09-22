@@ -99,7 +99,7 @@ export class FilterItemsRepository {
   }
 
   allSettled(promises: any) {
-    let wrappedPromises = promises.map((p: any) => Promise.resolve(p)
+    const wrappedPromises = promises.map((p: any) => Promise.resolve(p)
         .then(
             val => ({ status: 'fulfilled', value: val }),
             err => ({ status: 'rejected', reason: err })));
