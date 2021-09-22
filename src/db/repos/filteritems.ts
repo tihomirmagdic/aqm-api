@@ -118,7 +118,7 @@ export class FilterItemsRepository {
     });
     if (type === "xfast") {
       const results = await this.allSettled(result);
-      return { created: results.reduce((prev: number, call: any) => (prev + (call.status === "fulfilled" ? call.value.created : 0)), 0) };
+      return { created: results.reduce((prev: number, call: any) => (prev + (call.status === "ok" ? call.value.created : 0)), 0) };
     }
     else {
       return this.allSettled(result);
@@ -139,9 +139,10 @@ export class FilterItemsRepository {
 
     if (type === "fast") {
       const results = await this.allSettled(result);
-      return { updated: results.reduce((prev: number, call: any) => (prev + (call.status === "fulfilled" ? call.value.updated : 0)), 0) };
+      return { updated: results.reduce((prev: number, call: any) => (prev + (call.status === "ok" ? call.result.updated : 0)), 0) };
     } else {
-      return Promise.all(result);
+      return this.allSettled(result);
+      //return Promise.all(result);
     }
   }
 
