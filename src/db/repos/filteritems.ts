@@ -1,7 +1,7 @@
 import { IDatabase, IMain } from "pg-promise";
 import { IResult } from "pg-promise/typescript/pg-subset";
 import sqlProvider = require("../sql");
-import { checkModifiedIDs } from "../../server/handler";
+import { checkModifiedIDs, allSettled } from "../../server/handler";
 
 // import _ from "lodash";
 
@@ -48,6 +48,13 @@ export const shFilterItemsValuesWithKeys = Joi.object().keys({
   value: Joi.number(),
 });
 
+export const shFilterItemsValuesForCopy = Joi.object().keys({
+  filter: Joi.number().required(),
+  sensor: Joi.string().required(),
+  value: Joi.number().required(),
+  min_max: Joi.string().valid('min', 'max').required(),
+});
+
 export const shFilterItemsMultipleUpdate = Joi.array().items(shFilterItemsValuesWithKeys);
 
 const sql = sqlProvider.filteritems;
@@ -58,6 +65,8 @@ export class FilterItemsRepository {
   private pgp: IMain;
 
   private keys: string[] = ["filter", "sensor", "min_max"];
+
+  private autokeys: string[] = []; // auto-generated keys
 
   constructor(db: any, pgp: any) {
     this.db = db;
@@ -103,7 +112,7 @@ export class FilterItemsRepository {
     return obj;
   }
 
-  allSettled(promises: any) {
+  allSettledx(promises: any) {
     const wrappedPromises = promises.map((p: any) => Promise.resolve(p)
         .then(
             val => ({ status: "ok", result: val }),
@@ -117,11 +126,11 @@ export class FilterItemsRepository {
       result.push(this.add(type, values));
     });
     if (type === "xfast") {
-      const results = await this.allSettled(result);
+      const results = await allSettled(result);
       return { created: results.reduce((prev: number, call: any) => (prev + (call.status === "ok" ? call.value.created : 0)), 0) };
     }
     else {
-      return this.allSettled(result);
+      return allSettled(result);
       // return Promise.all(result);
     }
   }
@@ -137,16 +146,73 @@ export class FilterItemsRepository {
       result.push(this.update(type, { ids, values}));
     });
 
-    if (type === "fast") {
-      const results = await this.allSettled(result);
+    if (type === "xfast") {
+      const results = await allSettled(result);
       return { updated: results.reduce((prev: number, call: any) => (prev + (call.status === "ok" ? call.result.updated : 0)), 0) };
     } else {
-      return this.allSettled(result);
-      //return Promise.all(result);
+      return allSettled(result);
+      // return Promise.all(result);
     }
   }
 
   public delete(where: any[]) {
     return this.db.result(sql.remove, { where }, (r: IResult) => ({ deleted: r.rowCount }));
+  }
+
+  public copy(type: string, values: any): any {
+    if (!this.autokeys.length) {
+      throw new Error('autokeys empty! use clone instead');
+    }
+
+    const valueKeys = Object.keys(values);
+    const whereFields: any = {};
+    valueKeys.forEach((field: string) => {
+      if (this.keys.includes(field)) {
+        whereFields[field] = values[field];
+        delete values[field];
+      }
+    });
+
+    return this.cloneItem(type, whereFields, values);
+  }
+
+  public cloneItem(type: string, whereFields: any, values: any): any {
+    const valueKeys = Object.keys(values);
+    const allFields = Object.keys(shFilterItemsValuesForCopy.describe().keys);
+
+    const selectFields: any = {};
+    let selectValues: string = '';
+
+    allFields.forEach((field: string) => {
+      if (!this.autokeys.includes(field)) {
+        const value = valueKeys.includes(field) ? values[field] : undefined;
+        selectFields[field] = value;
+        if (selectValues !== '') {
+          selectValues += ', ';
+        }
+        if (value === undefined) {
+          selectValues += field;
+        } else {
+          const formatted = this.pgp.as.format("${value:raw}", { value });
+          if (Array.isArray(value)) {
+            selectValues += `${formatted}`;
+          } else {
+            selectValues += `'${formatted}'`;
+          }
+        }
+      }
+    });
+
+    const dbcall = type === "fast" ? this.db.none : this.db.one;
+    const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
+    return dbcall(sql.copy, { values: selectFields, select: selectValues, where: whereFields, returning });
+  }
+
+  public clone(type: string, values: any): any {
+    const result: any[] = [];
+    values.ids.forEach((id: any) => {
+      result.push(this.cloneItem(type, id, values.values));
+    });
+    return allSettled(result);
   }
 }

@@ -9,8 +9,8 @@ import { shTranslationsCreate, shTranslationsUpdate } from "../db/repos/translat
 import { shDictionaryIds, shDictionaryCreate, shDictionaryUpdate } from "../db/repos/dictionary";
 import { shConfigurationsCreate, shConfigurationsUpdate } from "../db/repos/configurations";
 import { shConfigurationItemsIds, shConfigurationItemsCreate, shConfigurationItemsUpdate } from "../db/repos/configurationitems";
-import { shFiltersCreate, shFiltersUpdate } from "../db/repos/filters";
-import { shFilterItemsIds, shFilterItemsCreate, shFilterItemsMultipleCreate, shFilterItemsUpdate, shFilterItemsMultipleUpdate } from "../db/repos/filteritems";
+import { shFiltersCreate, shFiltersUpdate, shFiltersValuesForCopy } from "../db/repos/filters";
+import { shFilterItemsIds, shFilterItemsCreate, shFilterItemsMultipleCreate, shFilterItemsValuesForCopy, shFilterItemsUpdate, shFilterItemsMultipleUpdate } from "../db/repos/filteritems";
 import { shRegionTypesCreate, shRegionTypesUpdate } from "../db/repos/regiontypes";
 import { shRegionsCreate, shRegionsUpdate } from "../db/repos/regions";
 import { shOwnersCreate, shOwnersUpdate } from "../db/repos/owners";
@@ -189,6 +189,16 @@ export const defineRoutes = (app: any, config: any) => {
 		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shFiltersCreate)]),
 		(db: DB, values: any[]) => db.filters.add(values[0].type, values[1]));
 
+	// create new filter as copy of existing one
+	routes.dbPOST("/filters/copy/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shFiltersValuesForCopy)]),
+		(db: DB, values: any[]) => db.filters.copy(values[0].type, values[1]));
+
+	// create new filter as clone of existing one
+	routes.dbPOST("/filters/clone/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shFiltersUpdate)]),
+		(db: DB, values: any[]) => db.filters.clone(values[0].type, values[1]));
+
 	// update filter(s)
 	routes.dbPUT("/filters/:type",
 		(req: Request) => multiValidator([valid(req.params, shDefaultTypeUpdate), valid(req.body, shFiltersUpdate)]),
@@ -221,6 +231,16 @@ export const defineRoutes = (app: any, config: any) => {
 	routes.dbPOST("/filter-items/:type",
 		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shFilterItemsCreate)]),
 		(db: DB, values: any[]) => db.filteritems.add(values[0].type, values[1]));
+
+	// create new filter item as copy of existing one
+	routes.dbPOST("/filter-items/copy/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shFilterItemsValuesForCopy)]),
+		(db: DB, values: any[]) => db.filteritems.copy(values[0].type, values[1]));
+
+	// create new filter item as clone of existing one
+	routes.dbPOST("/filter-items/clone/:type",
+		(req: Request) => multiValidator([valid(req.params, shDefaultTypeCreate), valid(req.body, shFilterItemsUpdate)]),
+		(db: DB, values: any[]) => db.filteritems.clone(values[0].type, values[1]));
 
 	// create new filter item
 	routes.dbPOST("/filter-items/multiple/:type",

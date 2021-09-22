@@ -96,6 +96,10 @@ exports.defineRoutes = (app, config) => {
     routes.dbPOST("/filters", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDs)]), (db, values) => db.filters.getByIDs(values[0].ids));
     // create new filter
     routes.dbPOST("/filters/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filters_1.shFiltersCreate)]), (db, values) => db.filters.add(values[0].type, values[1]));
+    // create new filter as copy of existing one
+    routes.dbPOST("/filters/copy/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filters_1.shFiltersValuesForCopy)]), (db, values) => db.filters.copy(values[0].type, values[1]));
+    // create new filter as clone of existing one
+    routes.dbPOST("/filters/clone/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filters_1.shFiltersUpdate)]), (db, values) => db.filters.clone(values[0].type, values[1]));
     // update filter(s)
     routes.dbPUT("/filters/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeUpdate), handler_1.valid(req.body, filters_1.shFiltersUpdate)]), (db, values) => db.filters.update(values[0].type, values[1]));
     // remove filter(s)
@@ -111,6 +115,10 @@ exports.defineRoutes = (app, config) => {
     routes.dbPOST("/filter-items", (req) => handler_1.multiValidator([handler_1.valid(req.body, filteritems_1.shFilterItemsIds)]), (db, values) => db.filteritems.getByIDs(values[0].ids));
     // create new filter item
     routes.dbPOST("/filter-items/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filteritems_1.shFilterItemsCreate)]), (db, values) => db.filteritems.add(values[0].type, values[1]));
+    // create new filter item as copy of existing one
+    routes.dbPOST("/filter-items/copy/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filteritems_1.shFilterItemsValuesForCopy)]), (db, values) => db.filteritems.copy(values[0].type, values[1]));
+    // create new filter item as clone of existing one
+    routes.dbPOST("/filter-items/clone/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filteritems_1.shFilterItemsUpdate)]), (db, values) => db.filteritems.clone(values[0].type, values[1]));
     // create new filter item
     routes.dbPOST("/filter-items/multiple/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, filteritems_1.shFilterItemsMultipleCreate)]), (db, values) => db.filteritems.multipleCreate(values[0].type, values[1]));
     // update filter item(s)

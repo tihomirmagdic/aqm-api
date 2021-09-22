@@ -37,6 +37,7 @@ export const filters = {
 	getAll: sql('filters/get-all.sql'),
 	getByIDs: sql('filters/get-by-ids.sql'),
 	add: sql('filters/add.sql'),
+	copy: sql('filters/copy.sql'),
 	update: sql('filters/update.sql'),
 	remove: sql('filters/remove.sql'),
 };
@@ -46,6 +47,7 @@ export const filteritems = {
 	getByFilter: sql('filter-items/get-by-filter.sql'),
 	getByIDs: sql('filter-items/get-by-ids.sql'),
 	add: sql('filter-items/add.sql'),
+	copy: sql('filter-items/copy.sql'),
 	update: sql('filter-items/update.sql'),
 	remove: sql('filter-items/remove.sql'),
 };

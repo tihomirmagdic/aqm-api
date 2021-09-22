@@ -30,6 +30,19 @@ interface Validation {
   options?: any;
 }
 
+const filterProps = (obj: any, props: string[]): any => {
+  Object.keys(obj).forEach((key: string) => !props.includes(key) ? delete obj[key] : null );
+  return obj;
+}
+
+export const allSettled = (promises: any): any => {
+  const wrappedPromises = promises.map((p: any) => Promise.resolve(p)
+      .then(
+          val => ({ status: "ok", result: val }),
+          err => ({ status: err.name || "rejected", reason: filterProps(err, ["code", "detail", "constraint"]) })));
+  return Promise.all(wrappedPromises);
+};
+
 export const valid = (params: any, schema: any, options?: any): Validation => ({
   params,
   schema,
@@ -117,7 +130,7 @@ export class Api {
         const data = await handler(req);
         responseData = { data, success: true };
       } catch(error) {
-        responseData = { error: error.message || error, success: false };
+        responseData = { error: (error instanceof Error) ? error.message : error, success: false };
       }
       return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
       /*
@@ -174,7 +187,7 @@ export class Api {
         const data = await handler(req);
         responseData = { data, success: true };
       } catch(error) {
-        responseData = { error: error.message || error, success: false };
+        responseData = { error: (error instanceof Error) ? error.message : error, success: false };
       }
       return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
       /*
@@ -231,7 +244,7 @@ export class Api {
         const data = await handler(req);
         responseData = { data, success: true };
       } catch(error) {
-        responseData = { error: error.message || error, success: false };
+        responseData = { error: (error instanceof Error) ? error.message : error, success: false };
       }
       return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
       /*
@@ -290,7 +303,7 @@ export class Api {
         const data = await handler(req);
         responseData = { data, success: true };
       } catch(error) {
-        responseData = { error: error.message || error, success: false };
+        responseData = { error: (error instanceof Error) ? error.message : error, success: false };
       }
       return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
       /*

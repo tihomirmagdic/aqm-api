@@ -21,6 +21,15 @@ exports.getDBContext = (req) => {
     // return { user: "postgres", password: "pg" };
     return { user: "nshsodqdoimnqo" };
 };
+const filterProps = (obj, props) => {
+    Object.keys(obj).forEach((key) => !props.includes(key) ? delete obj[key] : null);
+    return obj;
+};
+exports.allSettled = (promises) => {
+    const wrappedPromises = promises.map((p) => Promise.resolve(p)
+        .then(val => ({ status: "ok", result: val }), err => ({ status: err.name || "rejected", reason: filterProps(err, ["code", "detail", "constraint"]) })));
+    return Promise.all(wrappedPromises);
+};
 exports.valid = (params, schema, options) => ({
     params,
     schema,
@@ -86,7 +95,7 @@ class Api {
                     responseData = { data, success: true };
                 }
                 catch (error) {
-                    responseData = { error: error.message || error, success: false };
+                    responseData = { error: (error instanceof Error) ? error.message : error, success: false };
                 }
                 return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
                 /*
@@ -127,7 +136,7 @@ class Api {
                     responseData = { data, success: true };
                 }
                 catch (error) {
-                    responseData = { error: error.message || error, success: false };
+                    responseData = { error: (error instanceof Error) ? error.message : error, success: false };
                 }
                 return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
                 /*
@@ -168,7 +177,7 @@ class Api {
                     responseData = { data, success: true };
                 }
                 catch (error) {
-                    responseData = { error: error.message || error, success: false };
+                    responseData = { error: (error instanceof Error) ? error.message : error, success: false };
                 }
                 return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
                 /*
@@ -211,7 +220,7 @@ class Api {
                     responseData = { data, success: true };
                 }
                 catch (error) {
-                    responseData = { error: error.message || error, success: false };
+                    responseData = { error: (error instanceof Error) ? error.message : error, success: false };
                 }
                 return responser ? responser(req, res, responseData) : this.defaultResponse(req, res, responseData);
                 /*
