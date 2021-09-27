@@ -96,7 +96,7 @@ export class FiltersRepository {
         let pair = field.split('=').map((value: string) => value.trim());
         selectFields.push(pair[pair.length - 1]);
         pair = pair.map((value: string) => '"' + value + '"');
-        if (pair.length == 2) {
+        if (pair.length === 2) {
           return [pair[1], pair[0]].join(' as ');
         } else {
           return pair[0];
