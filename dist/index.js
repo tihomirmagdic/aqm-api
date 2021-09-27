@@ -14,18 +14,10 @@
  * https://github.com/vitaly-t/pg-promise-demo
  *
  */
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 process.env.NODE_ENV = "development";
 require('dotenv').config();
 const express = require("express");
-const bodyParser = __importStar(require("body-parser"));
 const os = require("os");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -62,7 +54,8 @@ app.use((req, res, next) => {
     }
     next();
 });
-app.use(bodyParser.json());
+//app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 app.use(helmet());
 // Config
 const config_1 = require("./server/config");

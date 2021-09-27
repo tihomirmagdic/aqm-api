@@ -90,8 +90,30 @@ exports.defineRoutes = (app, config) => {
     //////////////////////////////////////////////
     // Filters REST API
     //////////////////////////////////////////////
-    // get all filters
-    routes.dbGET("/filters", null, (db) => db.filters.get());
+    /*
+        // get all filters
+        routes.dbGET("/filters", null,
+            (db: DB) => db.filters.get());
+    */
+    // get all filter items
+    routes.dbGET("/filters", (req) => {
+        console.log("req.query1:", req.query);
+        console.log("Array.isArray(req.query.fields):", Array.isArray(req.query.fields));
+        if (req.query.fields) {
+            req.query.fields = handler_1.stringToArray(req.query.fields);
+        }
+        if (req.query.order) {
+            req.query.order = handler_1.stringToArray(req.query.order);
+        }
+        /* 			if (!Array.isArray(req.query.fields)) {
+                        const fields: any = (req.query.fields + '').trim().split('[').join('').split(']').join('');
+                        req.query.fields = fields.split(',');
+                        console.log("req.query2:", req.query);
+                    }
+                    */
+        console.log("req.query2:", req.query);
+        return handler_1.multiValidator([handler_1.valid(req.query, filters_1.shFiltersQuery)]);
+    }, (db, values) => db.filters.get(values[0]));
     // get filters by IDs
     routes.dbPOST("/filters", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDs)]), (db, values) => db.filters.getByIDs(values[0].ids));
     // create new filter

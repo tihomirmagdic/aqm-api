@@ -43,6 +43,10 @@ export const allSettled = (promises: any): any => {
   return Promise.all(wrappedPromises);
 };
 
+export const stringToArray = (s: any): string[] => {
+  return Array.isArray(s) ? s : s.trim().split('[').join('').split(']').join('').split(',').map((f: string) => f.trim());
+};
+
 export const valid = (params: any, schema: any, options?: any): Validation => ({
   params,
   schema,

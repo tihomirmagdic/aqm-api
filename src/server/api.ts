@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { DB, dbPool } from "../db";
-import { multiValidator, valid, Api } from "./handler";
+import { multiValidator, valid, Api, stringToArray } from "./handler";
 
 import { shID, shDefaultIDs, shDefaultIDsAsText, shText, shDefaultTypeCreate, shDefaultTypeUpdate, shDefaultTypeUpdate2 } from "./default-schemas";
 
@@ -9,7 +9,7 @@ import { shTranslationsCreate, shTranslationsUpdate } from "../db/repos/translat
 import { shDictionaryIds, shDictionaryCreate, shDictionaryUpdate } from "../db/repos/dictionary";
 import { shConfigurationsCreate, shConfigurationsUpdate } from "../db/repos/configurations";
 import { shConfigurationItemsIds, shConfigurationItemsCreate, shConfigurationItemsUpdate } from "../db/repos/configurationitems";
-import { shFiltersCreate, shFiltersUpdate, shFiltersValuesForCopy } from "../db/repos/filters";
+import { shFiltersCreate, shFiltersUpdate, shFiltersValuesForCopy, shFiltersQuery } from "../db/repos/filters";
 import { shFilterItemsIds, shFilterItemsCreate, shFilterItemsMultipleCreate, shFilterItemsValuesForCopy, shFilterItemsUpdate, shFilterItemsMultipleUpdate } from "../db/repos/filteritems";
 import { shRegionTypesCreate, shRegionTypesUpdate } from "../db/repos/regiontypes";
 import { shRegionsCreate, shRegionsUpdate } from "../db/repos/regions";
@@ -174,12 +174,36 @@ export const defineRoutes = (app: any, config: any) => {
 	//////////////////////////////////////////////
 	// Filters REST API
 	//////////////////////////////////////////////
-
+/*
 	// get all filters
 	routes.dbGET("/filters", null,
 		(db: DB) => db.filters.get());
+*/
+	// get all filter items
+	routes.dbGET("/filters", 
+		(req: Request) => {
+			console.log("req.query1:", req.query);
+			console.log("Array.isArray(req.query.fields):", Array.isArray(req.query.fields));
 
-	// get filters by IDs
+			if (req.query.fields) {
+				req.query.fields = stringToArray(req.query.fields);
+			}
+			if (req.query.order) {
+				req.query.order = stringToArray(req.query.order);
+			}
+
+/* 			if (!Array.isArray(req.query.fields)) {
+				const fields: any = (req.query.fields + '').trim().split('[').join('').split(']').join('');
+				req.query.fields = fields.split(',');
+				console.log("req.query2:", req.query);
+			}
+			*/			
+			console.log("req.query2:", req.query);
+			return multiValidator([valid(req.query, shFiltersQuery)]);
+		},
+		(db: DB, values: any[]) => db.filters.get(values[0]));
+
+		// get filters by IDs
 	routes.dbPOST("/filters",
 		(req: Request) => multiValidator([valid(req.body, shDefaultIDs)]),
 		(db: DB, values: any[]) => db.filters.getByIDs(values[0].ids));

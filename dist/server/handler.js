@@ -30,6 +30,9 @@ exports.allSettled = (promises) => {
         .then(val => ({ status: "ok", result: val }), err => ({ status: err.name || "rejected", reason: filterProps(err, ["code", "detail", "constraint"]) })));
     return Promise.all(wrappedPromises);
 };
+exports.stringToArray = (s) => {
+    return Array.isArray(s) ? s : s.trim().split('[').join('').split(']').join('').split(',').map((f) => f.trim());
+};
 exports.valid = (params, schema, options) => ({
     params,
     schema,

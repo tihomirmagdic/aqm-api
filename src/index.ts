@@ -18,7 +18,6 @@ process.env.NODE_ENV = "development";
 
 require('dotenv').config();
 import express = require("express");
-import * as bodyParser from "body-parser";
 import os = require("os");
 const cors = require("cors");
 import helmet = require("helmet");
@@ -60,7 +59,8 @@ app.use((req: any, res: any, next: any) => {
   next();
 });
 
-app.use(bodyParser.json());
+//app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 app.use(helmet());
 

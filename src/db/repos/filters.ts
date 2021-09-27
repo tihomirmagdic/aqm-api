@@ -49,6 +49,27 @@ export const shFiltersValuesForCopy = Joi.object().keys({
   locations: shLocations,
 });
 
+const fieldList = (() => Object.keys(shFiltersValuesForCopy.describe().keys))();
+const fieldListForOrder = [...fieldList, ...fieldList.map((field: string) => ('-' + field)), ...fieldList.map((field: string) => ('+' + field))];
+console.log("fieldList:", fieldList);
+console.log("fieldList for order:", fieldListForOrder);
+
+const shFields = Joi.string()
+  .valid(...fieldList);
+
+const shFieldsForOrder = Joi.string()
+  .valid(...fieldListForOrder);
+
+export const shFiltersQuery = Joi.object().keys({
+  //fields: Joi.array().unique().items(shFields),
+  fields: Joi.array().unique().items(Joi.string()),
+  order: Joi.array().unique().items(shFieldsForOrder),
+  //fields: Joi.array().unique().items(Joi.string().valid(...fieldList)),
+  //order: Joi.array().valid('id', 'name'),
+  limit: Joi.number().integer(),
+  bind: Joi.array().items(Joi.string()),
+});
+
 const sql = sqlProvider.filters;
 
 export class FiltersRepository {
@@ -65,8 +86,33 @@ export class FiltersRepository {
     this.pgp = pgp;
   }
 
-  public get() {
-    return this.db.any(sql.getAll);
+  public get(query: any) {
+    console.log("query:", query);
+    let { fields, order, limit } = query;
+
+    const selectFields: string[] = [];
+    fields = fields ?
+      fields.map((field: string) => {
+        let pair = field.split('=').map((value: string) => value.trim());
+        selectFields.push(pair[pair.length - 1]);
+        pair = pair.map((value: string) => '"' + value + '"');
+        if (pair.length == 2) {
+          return [pair[1], pair[0]].join(' as ');
+        } else {
+          return pair[0];
+        }
+      }
+    ).join(', ') : '*';
+
+    console.log("selectFields: ", selectFields);
+    console.log("fields: ", fields);
+    Joi.attempt(selectFields, Joi.array().unique().items(shFields), 'fields') ;
+
+    order = order ? ' order by ' + order.map((field: string) => field.startsWith('-') ? field.substr(1) + ' desc': field.startsWith('+') ? field.substr(1) : field).join(', ') : '';
+
+    limit = limit ? ' limit ' + limit : '';
+
+    return this.db.any(sql.getAll, { fields, order, limit});
   }
 
   public getByIDs(where: any) {
