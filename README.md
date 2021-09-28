@@ -1,29 +1,33 @@
-Airduino REST API
-=================
+# Airduino REST API
+
 version 1.0
 
 This is a Nodejs (TypeScript 3.x) implementation of REST API for Airduino project on PostgreSQL database.
 
 It implements following resources:
-* devices
-* devicetypes
-* owners
-* firmwares
-* configurations
-* configurationitems
-* regiontypes
-* regions
-* data
-* telemetry
+
+- devices
+- devicetypes
+- owners
+- firmwares
+- configurations
+- configurationitems
+- regiontypes
+- regions
+- data
+- telemetry
+- translations
+- dictionary
+- filters
+- filter items
 
 It uses cache for all enabled device's apikeys.
 
 Also, the plan is to implement REST API for resources:
-* events
-* rules
-* actions
-* filters
-* presettimeframes
+
+- events
+- rules
+- actions
 
 Also, plan is to implement session based APIs, SSL and user privileges.
 
@@ -38,13 +42,11 @@ First ensure clean .js, and .sql folders in /dist folder with clean script:
 npm run clean
 ```
 
-
 After cleaning, copy all .sql files:
 
 ```
 npm run copy:assets
 ```
-
 
 In development watch and copy in (/src) folder for any changes for .sql files:
 
@@ -52,9 +54,30 @@ In development watch and copy in (/src) folder for any changes for .sql files:
 npm run watch:assets
 ```
 
-
 Finally, run transpiling on every change of .ts file from development folder (/src) into .js in distribution folder (/dist):
 
 ```
 npm run dev
 ```
+
+## For all resources there is standard (internal) with following rules:
+
+### POST
+
+#### Searching
+
+JSON in body
+
+```
+{
+  "ids": [
+    { }, // id of object 1
+    { }, // id of object 2
+    { }, // id of object 3
+  ]
+}
+```
+
+#### Searching
+
+![POST search](./common/images/post-search.png)
