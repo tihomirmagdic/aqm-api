@@ -81,7 +81,7 @@ Rules marked with EX are experimental and available only for specific resources.
 
 - delete multiple objects by id
 
-**GET** - fields, order and limit in query
+**GET** - fields, order and limit in query EX
 
 **POST**
 | url | JSON in body | response type | description |
@@ -456,5 +456,7 @@ limit=<maximum number of objects>
 example:
 limit=5
 ```
+
+All query keywords (fields, order and limit) can be combined with each other.
 
 ![QUERY](./common/images/query.png)
