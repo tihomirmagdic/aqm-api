@@ -83,7 +83,7 @@ DELETE - delete existing objects
 
 POST
 | url | JSON in body | response type | description |
-| ------------- |:-----------------------:|:-----------------------:| -----------------------:|
+| ------------- |:-----------------------:|:-----------------------:|:-----------------------|
 | / | { ids } | | search objects |
 | / | { ... } | /full, /id, /fast | create single object |
 | /multiple | [ {}, {}... ] | /full, /id, /fast | create multiple objects |
@@ -92,13 +92,13 @@ POST
 
 PUT
 | url | JSON in body | response type | description |
-| ------------- |:-----------------------:|:-----------------------:| ---------------------------------:|
+| ------------- |:-----------------------:|:-----------------------:|:---------------------------------|
 | / | { ids, values } | /full, /id, /fast | update multiple objects by id's |
 | /multiple | [ {}, {}... ] | /full, /id, /fast | update multiple objects by values |
 
 DELETE
 | url | JSON in body | response type | description |
-| ------------- |:-----------------------:|:-----------------------:| -----------------------:|
+| ------------- |:-----------------------:|:-----------------------:|:-----------------------|
 | / | { ids } | | delete multiple objects |
 
 ### POST
