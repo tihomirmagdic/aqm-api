@@ -60,11 +60,27 @@ Finally, run transpiling on every change of .ts file from development folder (/s
 npm run dev
 ```
 
-## For all resources there is standard (internal) with following rules:
+## For all resources there is standard (internal) with following rules
+
+Rules marked with EX are experimental and available only for specific resources.
+
+POST - search and create new objects
+search by id
+create single object
+create multiple objects EX
+copy single objects EX
+copy multiple objects EX
+
+PUT - update existing objects
+update multiple objects by id's
+update multiple objects by values EX
+
+DELETE - delete existing objects
+delete multiple objects
 
 ### POST
 
-#### Searching
+#### Search
 
 Retrieves all objects with id in ids attribute.
 
@@ -82,7 +98,7 @@ JSON in body
 
 ![POST search](./common/images/post-search.png)
 
-#### Creating new object
+#### Create single object
 
 Request contains values to create an object with. Other values may be auto generated on back-end side.
 
@@ -120,7 +136,7 @@ If error occurs during creating new object, the response contains error message 
 
 ![POST create](./common/images/post-standard-full-error.png)
 
-#### Creating multiple object(s)
+#### Create multiple objects
 
 Create multiple objects with requested values.
 Similary as in single object creation, request contains object values for creating multiple objects. Objects' values are in array of object's values.
@@ -142,18 +158,95 @@ There're three version for response type:
 
 The reponse contains values of created objects, also in array of values.
 
-![POST create](./common/images/post-multiple-full.png)
+![POST multiple](./common/images/post-multiple-full.png)
 
 ##### /multiple/id
 
 The reponse contains only id value(s) of the created objects in array.
 
-![POST create](./common/images/post-multiple-id.png)
+![POST multiple](./common/images/post-multiple-id.png)
 
 ##### /multiple/fast
 
-The reponse contains only status of the created object ("success": true | false) in array.
+The reponse contains only status of the created objects ("status": "ok" | "error") in array, and number of created object in result.created property.
 
 In the following example creation of the first object failed with false in "status" property and error object contains code, detail, and constraint.
 
-![POST create](./common/images/post-multiple-fast.png)
+![POST multiple](./common/images/post-multiple-fast.png)
+
+#### Copy single objects
+
+To copy an object request should contain id of a object to copy. In addition to the object id, other values that we want to have in the new copied object can be specified.
+
+JSON in body
+
+```
+{ // id of the existing object to copy and values of new object
+  ...
+}
+```
+
+There're three version for response type:
+
+##### /copy/full
+
+The reponse contains values of created object.
+
+In this example request contains object id only.
+
+![POST copy](./common/images/post-copy-full2.png)
+
+The reponse contains object id with values of new object.
+
+![POST copy](./common/images/post-copy-full.png)
+
+##### /copy/id
+
+The reponse contains only id value(s) of the created object.
+
+![POST copy](./common/images/post-copy-id.png)
+
+##### /copy/fast
+
+The reponse contains only status of the created object ("status": "ok" | "error") in array, and number of created object in result.created property.
+
+![POST copy](./common/images/post-copy-fast.png)
+
+#### Copy multiple objects
+
+To copy multiple objects request should contain id's of objects to copy in "ids" property as array. In "values" property are all values (incuding id attibutes) that we want to have in the new copied objects.
+
+JSON in body
+
+```
+{
+  "ids": [ // id's of the existing objects to copy
+    {},
+    {},
+    {},
+  ],
+  "values": { // common values of new copied objects (may include properties of object's id)
+    ...
+  }
+}
+```
+
+There're three version for response type:
+
+##### /clone/full
+
+The reponse contains values of created object.
+
+![POST clone](./common/images/post-clone-full.png)
+
+##### /clone/id
+
+The reponse contains only id value(s) of the created object.
+
+![POST clone](./common/images/post-clone-id.png)
+
+##### /clone/fast
+
+The reponse contains only status of the created object ("status": "ok" | "error") in array, and number of created object in result.created property.
+
+![POST clone](./common/images/post-clone-fast.png)
