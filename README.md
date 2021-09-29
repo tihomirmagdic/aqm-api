@@ -327,3 +327,15 @@ The reponse contains only id value(s) of the updated objects in array.
 The reponse contains only status of the updated object ("success": true | false), and number of updated objects in data.updated property.
 
 ![PUT multiple](./common/images/put-multiple-fast.png)
+
+### Delete multiple objects
+
+To delete multiple objects request should contain id's of objects to delete in "ids" property as array.
+
+![DELETE](./common/images/delete.png)
+
+As some objects are not found, data.deleted property in response has number of successfully deleted objects (without error).
+
+![DELETE](./common/images/delete2.png)
+
+![DELETE](./common/images/delete.png)![DELETE](./common/images/delete2.png)
