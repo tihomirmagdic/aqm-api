@@ -127,13 +127,17 @@ The reponse contains all the values of the created object.
 
 ![POST create](./common/images/post-standard-full.png)
 
-##### POST <base url><resource>/id
+```
+POST <base url><resource>/id
+```
 
 The reponse contains only id value(s) of the created object.
 
 ![POST create](./common/images/post-standard-id.png)
 
-##### POST <base url><resource>/fast
+```
+POST <base url><resource>/fast
+```
 
 The reponse contains only status of the created object ("success": true | false).
 
@@ -163,19 +167,25 @@ JSON in body
 
 There're three version for response type:
 
-##### POST <base url><resource>/multiple/full
+```
+POST <base url><resource>/multiple/full
+```
 
 The reponse contains values of created objects, also in array of values.
 
 ![POST multiple](./common/images/post-multiple-full.png)
 
-##### POST <base url><resource>/multiple/id
+```
+POST <base url><resource>/multiple/id
+```
 
 The reponse contains only id value(s) of the created objects in array.
 
 ![POST multiple](./common/images/post-multiple-id.png)
 
-##### POST <base url><resource>/multiple/fast
+```
+POST <base url><resource>/multiple/fast
+```
 
 The reponse contains only status of the created objects ("status": "ok" | "error") in array, and number of created object in result.created property.
 
@@ -197,7 +207,9 @@ JSON in body
 
 There're three version for response type:
 
-##### POST <base url><resource>/copy/full
+```
+POST <base url><resource>/copy/full
+```
 
 The reponse contains values of created object.
 
@@ -209,13 +221,17 @@ The reponse contains object id with values of new object.
 
 ![POST copy](./common/images/post-copy-full.png)
 
-##### POST <base url><resource>/copy/id
+```
+POST <base url><resource>/copy/id
+```
 
 The reponse contains only id value(s) of the created object.
 
 ![POST copy](./common/images/post-copy-id.png)
 
-##### POST <base url><resource>/copy/fast
+```
+POST <base url><resource>/copy/fast
+```
 
 The reponse contains only status of the created object ("status": "ok" | "error") in array, and number of created object in result.created property.
 
@@ -242,19 +258,25 @@ JSON in body
 
 There're three version for response type:
 
-##### POST <base url><resource>/clone/full
+```
+POST <base url><resource>/clone/full
+```
 
 The reponse contains values of created object.
 
 ![POST clone](./common/images/post-clone-full.png)
 
-##### POST <base url><resource>/clone/id
+```
+POST <base url><resource>/clone/id
+```
 
 The reponse contains only id value(s) of the created object.
 
 ![POST clone](./common/images/post-clone-id.png)
 
-##### POST <base url><resource>/clone/fast
+```
+POST <base url><resource>/clone/fast
+```
 
 The reponse contains only status of the created object ("status": "ok" | "error") in array, and number of created object in result.created property.
 
@@ -283,19 +305,25 @@ JSON in body
 
 There're three version for response type:
 
-##### PUT <base url><resource>/full
+```
+PUT <base url><resource>/full
+```
 
 The reponse contains values of updated object.
 
 ![PUT](./common/images/put-full.png)
 
-##### PUT <base url><resource>/id
+```
+PUT <base url><resource>/id
+```
 
 The reponse contains only id value(s) of the updated object.
 
 ![PUT](./common/images/put-id.png)
 
-##### PUT <base url><resource>/fast
+```
+PUT <base url><resource>/fast
+```
 
 The reponse contains only status of the updated object ("success": true | false), and number of updated objects in data.updated property.
 
@@ -318,19 +346,25 @@ JSON in body
 
 There're three version for response type:
 
-##### PUT <base url><resource>/multiple/full
+```
+PUT <base url><resource>/multiple/full
+```
 
 The reponse contains values of updated objects in array.
 
 ![PUT multiple](./common/images/put-multiple-full.png)
 
-##### PUT <base url><resource>/multiple/id
+```
+PUT <base url><resource>/multiple/id
+```
 
 The reponse contains only id value(s) of the updated objects in array.
 
 ![PUT multiple](./common/images/put-multiple-id.png)
 
-##### PUT <base url><resource>/multiple/fast
+```
+PUT <base url><resource>/multiple/fast
+```
 
 The reponse contains only status of the updated object ("success": true | false), and number of updated objects in data.updated property.
 
@@ -342,7 +376,9 @@ The reponse contains only status of the updated object ("success": true | false)
 
 To delete multiple objects request should contain id's of objects to delete in "ids" property as array.
 
-##### delete <base url><resource>
+```
+DELETE <base url><resource>
+```
 
 ![DELETE](./common/images/delete.png)
 
