@@ -65,18 +65,21 @@ npm run dev
 Rules marked with EX are experimental and available only for specific resources.
 
 POST - search and create new objects
-search by id
-create single object
-create multiple objects EX
-copy single objects EX
-copy multiple objects EX
+
+- search by id
+- create single object
+- create multiple objects EX
+- copy single objects EX
+- copy multiple objects EX
 
 PUT - update existing objects
-update multiple objects by id's
-update multiple objects by values EX
+
+- update multiple objects by id's
+- update multiple objects by values EX
 
 DELETE - delete existing objects
-delete multiple objects
+
+- delete multiple objects
 
 ### POST
 
@@ -250,3 +253,77 @@ The reponse contains only id value(s) of the created object.
 The reponse contains only status of the created object ("status": "ok" | "error") in array, and number of created object in result.created property.
 
 ![POST clone](./common/images/post-clone-fast.png)
+
+#### Update multiple objects by id's
+
+To update multiple objects by id's request should contain id's of objects to update in "ids" property as array. In "values" property are all values (may incude id attibutes) that we want to have in the updated objects.
+
+JSON in body
+
+```
+{
+  "ids": [ // id's of the existing objects to update
+    {},
+    {},
+    {},
+  ],
+  "values": { // common values of updated objects (may include properties of object's id)
+    ...
+  }
+}
+```
+
+There're three version for response type:
+
+##### /full
+
+The reponse contains values of updated object.
+
+![PUT](./common/images/put-full.png)
+
+##### /id
+
+The reponse contains only id value(s) of the updated object.
+
+![PUT](./common/images/put-id.png)
+
+##### /fast
+
+The reponse contains only status of the updated object ("success": true | false), and number of updated objects in data.updated property.
+
+![PUT](./common/images/put-fast.png)
+
+#### Update multiple objects by values
+
+To update multiple objects by values request should contain array of values of objects including object id to update. It recognizes properties of object id to retrieve object to update and properties of other object values to update these values.
+
+JSON in body
+
+```
+[
+  { }, // values of new object 1
+  { }, // values of new object 2
+  { }, // values of new object 3
+  ...
+]
+```
+
+There're three version for response type:
+
+##### /multiple/full
+
+The reponse contains values of updated objects in array.
+
+![PUT multiple](./common/images/put-multiple-full.png)
+
+##### /multiple/id
+
+The reponse contains only id value(s) of the updated objects in array.
+
+![PUT multiple](./common/images/put-multiple-id.png)
+
+##### /multiple/fast
+
+The reponse contains only status of the updated object ("success": true | false), and number of updated objects in data.updated property.
+
+![PUT multiple](./common/images/put-multiple-fast.png)
