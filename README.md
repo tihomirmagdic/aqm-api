@@ -64,7 +64,7 @@ npm run dev
 
 Rules marked with EX are experimental and available only for specific resources.
 
-POST - search and create new objects
+**POST** - search and create new objects
 
 - search by id
 - create single object
@@ -72,16 +72,18 @@ POST - search and create new objects
 - copy single objects EX
 - copy multiple objects EX
 
-PUT - update existing objects
+**PUT** - update existing objects
 
 - update multiple objects by id
 - update multiple objects by values EX
 
-DELETE - delete existing objects
+**DELETE** - delete existing objects
 
 - delete multiple objects by id
 
-POST
+**GET** - fields, order and limit in query
+
+**POST**
 | url | JSON in body | response type | description |
 | ------------- |:-----------------------:|:-----------------------:|:-----------------------|
 | / | { ids } | | search objects |
@@ -90,13 +92,13 @@ POST
 | /copy | { ... } | /full, /id, /fast | copy single object |
 | /clone | { ids, values } | /full, /id, /fast | copy multiple objects |
 
-PUT
+**PUT**
 | url | JSON in body | response type | description |
 | ------------- |:-----------------------:|:-----------------------:|:---------------------------------|
 | / | { ids, values } | /full, /id, /fast | update multiple objects by id |
 | /multiple | [ {}, {}... ] | /full, /id, /fast | update multiple objects by values |
 
-DELETE
+**DELETE**
 | url | JSON in body | response type | description |
 | ------------- |:-----------------------:|:-----------------------:|:-----------------------|
 | / | { ids } | | delete multiple objects by id |
@@ -405,3 +407,54 @@ DELETE <base url><resource>
 As some objects are not found, data.deleted property in response has number of successfully deleted objects (without error).
 
 ![DELETE](./common/images/delete2.png)
+
+### GET
+
+#### Fields
+
+To retrieve only specific fields, query should have 'fields' in request's url as:
+
+```
+fields=<list of fields>
+
+example:
+fields=id,name
+
+equivalent to:
+fields=[id,name]
+
+or
+fields[]=id&fields[]=name
+```
+
+#### Order by fields
+
+Sorting objects by field or fields, query should have 'order' in request's url as:
+
+If field name has '-' (minus, dash) as name prefix then sorting is defined as descending by that field
+
+```
+order=<list of fields>
+
+example:
+order=id,-name
+
+equivalent to:
+order=[id,-name]
+
+or
+order[]=id&fields[]=-name
+```
+
+#### Limit
+
+To limitg number of objects, query should have 'limit' in request's url as:
+
+```
+limit=<maximum number of objects>
+
+example:
+limit=5
+```
+
+![QUERY](./common/images/query.png)
