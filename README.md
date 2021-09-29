@@ -99,7 +99,9 @@ JSON in body
 }
 ```
 
-##### POST <base url><resource>
+```
+POST <base url><resource>
+```
 
 ![POST search](./common/images/post-search.png)
 
@@ -117,7 +119,9 @@ JSON in body
 
 There're three version for response type:
 
-##### POST <base url><resource>/full
+```
+POST <base url><resource>/full
+```
 
 The reponse contains all the values of the created object.
 
