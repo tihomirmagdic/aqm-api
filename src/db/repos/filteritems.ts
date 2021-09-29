@@ -203,16 +203,36 @@ export class FilterItemsRepository {
       }
     });
 
-    const dbcall = type === "fast" ? this.db.none : this.db.one;
+    const dbcall = type === "fast" ? this.db.result : this.db.one;
     const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
-    return dbcall(sql.copy, { values: selectFields, select: selectValues, where: whereFields, returning });
+    if (type === "fast") {
+      return dbcall(sql.copy, { values: selectFields, select: selectValues, where: whereFields, returning }, (r: IResult) => ({ created: r.rowCount }));
+    } else {
+      return dbcall(sql.copy, { values: selectFields, select: selectValues, where: whereFields, returning });
+    }
   }
 
-  public clone(type: string, values: any): any {
+  public async clone(type: string, values: any): Promise<any> {
     const result: any[] = [];
     values.ids.forEach((id: any) => {
       result.push(this.cloneItem(type, id, values.values));
     });
     return allSettled(result);
   }
+
+  public async multipleCreate0(type: string, data: any): Promise<any> {
+    const result: any[] = [];
+    data.forEach((values: any) => {
+      result.push(this.add(type, values));
+    });
+    if (type === "xfast") {
+      const results = await allSettled(result);
+      return { created: results.reduce((prev: number, call: any) => (prev + (call.status === "ok" ? call.value.created : 0)), 0) };
+    }
+    else {
+      return allSettled(result);
+      // return Promise.all(result);
+    }
+  }
+  
 }

@@ -187,7 +187,11 @@ export class FiltersRepository {
 
     const dbcall = type === "fast" ? this.db.none : this.db.one;
     const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
-    return dbcall(sql.copy, { values: selectFields, select: selectValues, where: whereFields, returning });
+    if (type === "fast") {
+      return dbcall(sql.copy, { values: selectFields, select: selectValues, where: whereFields, returning }, (r: IResult) => ({ created: r.rowCount }));
+    } else {
+      return dbcall(sql.copy, { values: selectFields, select: selectValues, where: whereFields, returning });
+    }
   }
 
   public clone(type: string, values: any): any {
