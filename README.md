@@ -74,12 +74,12 @@ POST - search and create new objects
 
 PUT - update existing objects
 
-- update multiple objects by id's
+- update multiple objects by id
 - update multiple objects by values EX
 
 DELETE - delete existing objects
 
-- delete multiple objects
+- delete multiple objects by id
 
 POST
 | url | JSON in body | response type | description |
@@ -93,13 +93,13 @@ POST
 PUT
 | url | JSON in body | response type | description |
 | ------------- |:-----------------------:|:-----------------------:|:---------------------------------|
-| / | { ids, values } | /full, /id, /fast | update multiple objects by id's |
+| / | { ids, values } | /full, /id, /fast | update multiple objects by id |
 | /multiple | [ {}, {}... ] | /full, /id, /fast | update multiple objects by values |
 
 DELETE
 | url | JSON in body | response type | description |
 | ------------- |:-----------------------:|:-----------------------:|:-----------------------|
-| / | { ids } | | delete multiple objects |
+| / | { ids } | | delete multiple objects by id |
 
 ### POST
 
@@ -304,7 +304,7 @@ The reponse contains only status of the created object ("status": "ok" | "error"
 
 ### PUT
 
-#### Update multiple objects by id's
+#### Update multiple objects by id
 
 To update multiple objects by id's request should contain id's of objects to update in "ids" property as array. In "values" property are all values (may incude id attibutes) that we want to have in the updated objects.
 
@@ -392,7 +392,7 @@ The reponse contains only status of the updated object ("success": true | false)
 
 ### DELETE
 
-#### Delete multiple objects
+#### Delete multiple objects by id
 
 To delete multiple objects request should contain id's of objects to delete in "ids" property as array.
 
