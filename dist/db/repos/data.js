@@ -76,9 +76,9 @@ exports.shDataRetrievePage = Joi.object().keys({
 });
 const sql = sqlProvider.data;
 class DataRepository {
+    // private cache: CacheData = new CacheData(new FileCache(60));
     constructor(db, pgp) {
-        // private cache: CacheData = new CacheData(new MemoryCache(60));
-        this.cache = new cachedata_1.CacheData(new cachedata_1.FileCache(60));
+        this.cache = new cachedata_1.CacheData(new cachedata_1.MemoryCache(60));
         this.existingCols = (values, columnSet) => {
             // filter existing columns from columnset or create new ones on-the-fly
             const keys = Object.keys(values);

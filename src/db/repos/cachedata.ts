@@ -97,13 +97,8 @@ export class FileCache implements CacheProvider {
   }
 
   public exists(id: string): boolean {
-    // console.log('exists id:', id);
     if(fs.existsSync(id)) {
       const stats = fs.statSync(id);
-      // console.log('exists stats:', stats);
-      // console.log('Date.ISO:', new Date().toISOString());
-      // console.log('Date.now:', Date.now());
-      // console.log('test atime:', (stats.atime.valueOf() + this.validSeconds * 1000));
       return (Date.now().valueOf() <= (stats.atime.valueOf() + this.validSeconds * 1000));
     } else {
       return false;
@@ -111,20 +106,7 @@ export class FileCache implements CacheProvider {
   }
 
   async setData(id: string, data: any) {
-    // console.log('setData id:', id);
-    // const data = [{id: 1}, {id: 2}];
-    // console.log('Date.now:', new Date().toISOString());
     await fs.promises.writeFile(id, JSON.stringify(data), 'utf8');
-/*
-    const buffer = await fs.promises.readFile(id, 'utf8');
-    console.log('buffer string:', buffer.toString());
-    console.log('buffer len:', buffer.toString().length);
-    const rdata = JSON.parse(buffer.toString());
-    console.log('rdata:', rdata);
-    console.log('rdata.len:', rdata.length);
-*/
-    // const stats = fs.statSync(id);
-    // console.log('setData stats:', stats);
   }
 
   async getData(id: string, params: any) {
@@ -144,10 +126,6 @@ export class FileCache implements CacheProvider {
       files.forEach((file: string) => {
         console.log('file:', file);
         const stats = fs.statSync(this.cacheDir + '/' + file);
-        // console.log('exists stats:', stats);
-        // console.log('Date.ISO:', new Date().toISOString());
-        // console.log('Date.now:', Date.now());
-        // console.log('test atime:', (stats.atime.valueOf() + this.validSeconds * 1000));
         if(!(Date.now().valueOf() <= (stats.atime.valueOf() + this.validSeconds * 1000))) {
           console.log('deleting file:', file);
           fs.unlink(this.cacheDir + '/' + file, (unlinkErr: any) => {
@@ -158,7 +136,6 @@ export class FileCache implements CacheProvider {
             console.log('file deleted:', file);
           })
         }
-
       });
     });
   }

@@ -107,8 +107,8 @@ export class DataRepository {
   private static cs: DataColumnsets;
   private db: DB;
   private pgp: IMain;
-  // private cache: CacheData = new CacheData(new MemoryCache(60));
-  private cache: CacheData = new CacheData(new FileCache(60));
+  private cache: CacheData = new CacheData(new MemoryCache(60));
+  // private cache: CacheData = new CacheData(new FileCache(60));
 
   constructor(db: any, pgp: any) {
     this.db = db;
