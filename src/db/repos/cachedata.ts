@@ -16,9 +16,9 @@ export interface CacheProvider {
 
   exists(id: string): boolean;
 
-  setData(id: string, data: any): any;
+  setData(id: string, data: any): void;
 
-  getData(id: string, params: any): any;
+  getData(id: string, params: any): any | Promise<any>;
 
   gc(): void;
 };
@@ -32,24 +32,14 @@ export class MemoryCache implements CacheProvider {
   }
 
   public id(params: any): string {
-    // console.log('get id input params:', params);
     const paramsId = {...params};
     delete paramsId.offset;
     delete paramsId.limit;
-    // console.log('get id params:', paramsId);
     return 'cache' + hashCode(JSON.stringify(paramsId));
   }
 
   public exists(id: string): boolean {
-    // console.log('id:', id);
-    // console.log('cache keys:', Object.keys(this.cache));
     const item = this.cache[id];
-    // console.log('this.cache:', JSON.stringify(this.cache));
-    if (item !== undefined) {
-      // console.log('item.validUntil:', item.validUntil);
-    }
-    // console.log('Date.now():', Date.now());
-//    console.log('item.validUntil:', item.validUntil);
     return (item !== undefined) && (Date.now() <= Date.parse(item.validUntil));
   }
 
@@ -58,12 +48,10 @@ export class MemoryCache implements CacheProvider {
       validUntil: new Date(Date.now() + this.validSeconds * 1000).toISOString(),
       data
     }
-    // console.log('this.cache:', JSON.stringify(this.cache));
   }
 
   public getData(id: string, params: any): any {
     const data: any[] = this.cache[id].data;
-    // console.log('params:', params);
     return data.slice(params.offset, params.offset + params.limit);
   }
 
@@ -109,7 +97,7 @@ export class FileCache implements CacheProvider {
     await fs.promises.writeFile(id, JSON.stringify(data), 'utf8');
   }
 
-  async getData(id: string, params: any) {
+  async getData(id: string, params: any): Promise<any> {
     // console.log('getData id:', id);
     const buffer = await fs.promises.readFile(id, 'utf8');
     // console.log('buffer:', buffer.substr(-5));
