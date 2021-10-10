@@ -6,5 +6,3 @@ where
   ${measured:raw} and
   ${locations:raw}
 ${order:raw}
-offset ${offset}
-limit ${limit}

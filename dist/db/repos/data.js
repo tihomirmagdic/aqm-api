@@ -78,7 +78,7 @@ const sql = sqlProvider.data;
 class DataRepository {
     constructor(db, pgp) {
         //private cache: any = null;
-        //private cache: any = new CacheData(new FileCache(60));
+        //private cache: any = new CacheData(new MemoryCache(60));
         this.cache = new cachedata_1.CacheData(new cachedata_1.FileCache(60));
         this.needGC = 0;
         this.existingCols = (values, columnSet) => {
@@ -194,9 +194,11 @@ class DataRepository {
         console.log("order:", order);
         console.log("limit:", limit);
         */
-        this.needGC = (this.needGC + 1) % 500;
-        if (page === 1 && !this.needGC && this.cache) {
-            this.cache.gc();
+        if (page === 1 && this.cache) {
+            this.needGC = (this.needGC + 1) % 500;
+            if (!this.needGC) {
+                this.cache.gc();
+            }
         }
         const returnValue = this.cache ?
             this.cache.get({ fields, measured, locations, order, offset: config.pageSize * (page - 1), limit }, () => this.db.any(sql.getAllData, {

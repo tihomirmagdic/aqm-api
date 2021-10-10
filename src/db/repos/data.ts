@@ -109,7 +109,7 @@ export class DataRepository {
   private pgp: IMain;
 
   //private cache: any = null;
-  //private cache: any = new CacheData(new FileCache(60));
+  //private cache: any = new CacheData(new MemoryCache(60));
   private cache: any = new CacheData(new FileCache(60));
   private needGC = 0;
 
@@ -267,10 +267,12 @@ export class DataRepository {
     console.log("order:", order);
     console.log("limit:", limit);
     */
-    this.needGC = (this.needGC + 1) % 500;
+    if(page === 1 && this.cache) {
+      this.needGC = (this.needGC + 1) % 500;
 
-    if(page === 1 && !this.needGC && this.cache) {
-      this.cache.gc();
+      if(!this.needGC) {
+        this.cache.gc();
+      }
     }
 
     const returnValue = this.cache ?
