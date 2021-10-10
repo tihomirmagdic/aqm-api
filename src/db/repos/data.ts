@@ -109,8 +109,8 @@ export class DataRepository {
   private pgp: IMain;
 
   //private cache: any = null;
-  //private cache: any = new CacheData(new MemoryCache(60));
-  private cache: any = new CacheData(new FileCache(60));
+  private cache: any = new CacheData(new MemoryCache(60));
+  //private cache: any = new CacheData(new FileCache(60));
   private needGC = 0;
 
   constructor(db: any, pgp: any) {
