@@ -180,7 +180,7 @@ export const defineRoutes = (app: any, config: any) => {
 		(db: DB) => db.filters.get());
 */
 	// get all filter items
-	routes.dbGET("/filters", 
+	routes.dbGET("/filters",
 		(req: Request) => {
 			console.log("req.query1:", req.query);
 			console.log("Array.isArray(req.query.fields):", Array.isArray(req.query.fields));
@@ -197,7 +197,7 @@ export const defineRoutes = (app: any, config: any) => {
 				req.query.fields = fields.split(',');
 				console.log("req.query2:", req.query);
 			}
-			*/			
+			*/
 			console.log("req.query2:", req.query);
 			return multiValidator([valid(req.query, shFiltersQuery)]);
 		},

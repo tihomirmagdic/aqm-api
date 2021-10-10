@@ -234,5 +234,5 @@ export class FilterItemsRepository {
       // return Promise.all(result);
     }
   }
-  
+
 }

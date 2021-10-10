@@ -61,11 +61,11 @@ const shFieldsForOrder = Joi.string()
   .valid(...fieldListForOrder);
 
 export const shFiltersQuery = Joi.object().keys({
-  //fields: Joi.array().unique().items(shFields),
+  // fields: Joi.array().unique().items(shFields),
   fields: Joi.array().unique().items(Joi.string()),
   order: Joi.array().unique().items(shFieldsForOrder),
-  //fields: Joi.array().unique().items(Joi.string().valid(...fieldList)),
-  //order: Joi.array().valid('id', 'name'),
+  // fields: Joi.array().unique().items(Joi.string().valid(...fieldList)),
+  // order: Joi.array().valid('id', 'name'),
   limit: Joi.number().integer(),
   bind: Joi.array().items(Joi.string()),
 });
@@ -185,7 +185,7 @@ export class FiltersRepository {
       }
     });
 
-    const dbcall = type === "fast" ? this.db.none : this.db.one;
+    const dbcall = type === "fast" ? this.db.one : this.db.one;
     const returning = type === "full" ? "returning *" : type === "id" ? "returning " + this.keys.join(", ") : "";
     if (type === "fast") {
       return dbcall(sql.copy, { values: selectFields, select: selectValues, where: whereFields, returning }, (r: IResult) => ({ created: r.rowCount }));

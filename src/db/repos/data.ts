@@ -6,6 +6,7 @@ import { shNumber, shPolygon } from "./regions";
 // import _ from "lodash";
 
 import * as Joi from "@hapi/joi";
+import { CacheData, MemoryCache, FileCache } from "./cachedata";
 
 // device, pm10, pm2_5, so2, co, o3, pb, hc, voc, temp, humidity, pressure, gps, battery, measured, received, aqi
 
@@ -106,6 +107,8 @@ export class DataRepository {
   private static cs: DataColumnsets;
   private db: DB;
   private pgp: IMain;
+  // private cache: CacheData = new CacheData(new MemoryCache(60));
+  private cache: CacheData = new CacheData(new FileCache(60));
 
   constructor(db: any, pgp: any) {
     this.db = db;
@@ -161,6 +164,7 @@ export class DataRepository {
 
   public get(page: number, values: any) {
     const config = { pageSize: 500, owner: 1 }; // from configuration
+    // const config = { pageSize: 2, owner: 1 }; // from configuration
 
     const aFields = values.sensors;
     /*
@@ -186,7 +190,7 @@ export class DataRepository {
       ? `measured between ${from} and ${to}\n`
       : `measured >= ${from}\n`;
 
-    let locations;
+    let locations: any;
     let addTables = "\n";
     if (values.locations.devices) {
       locations = `device in (${values.locations.devices.join(", ")})`;
@@ -260,6 +264,21 @@ export class DataRepository {
     console.log("order:", order);
     console.log("limit:", limit);
     */
+    if(page === 1) {
+      this.cache.gc();
+    }
+
+    return this.cache.get({ fields, measured, locations, order, offset: config.pageSize * (page - 1), limit },
+      () => this.db.any(sql.get, {
+        fields,
+        measured,
+        addTables,
+        locations,
+        order,
+        // offset: config.pageSize * (page - 1),
+        // limit,
+      })
+    );
 
     return this.db.any(sql.get, {
       fields,
