@@ -76,9 +76,11 @@ exports.shDataRetrievePage = Joi.object().keys({
 });
 const sql = sqlProvider.data;
 class DataRepository {
-    // private cache: CacheData = new CacheData(new FileCache(60));
     constructor(db, pgp) {
-        this.cache = new cachedata_1.CacheData(new cachedata_1.MemoryCache(60));
+        //private cache: any = null;
+        //private cache: any = new CacheData(new FileCache(60));
+        this.cache = new cachedata_1.CacheData(new cachedata_1.FileCache(60));
+        this.needGC = 0;
         this.existingCols = (values, columnSet) => {
             // filter existing columns from columnset or create new ones on-the-fly
             const keys = Object.keys(values);
@@ -192,25 +194,30 @@ class DataRepository {
         console.log("order:", order);
         console.log("limit:", limit);
         */
-        if (page === 1) {
+        this.needGC = (this.needGC + 1) % 500;
+        if (page === 1 && !this.needGC && this.cache) {
             this.cache.gc();
         }
-        return this.cache.get({ fields, measured, locations, order, offset: config.pageSize * (page - 1), limit }, () => this.db.any(sql.get, {
-            fields,
-            measured,
-            addTables,
-            locations,
-            order,
-        }));
-        return this.db.any(sql.get, {
-            fields,
-            measured,
-            addTables,
-            locations,
-            order,
-            offset: config.pageSize * (page - 1),
-            limit,
-        });
+        const returnValue = this.cache ?
+            this.cache.get({ fields, measured, locations, order, offset: config.pageSize * (page - 1), limit }, () => this.db.any(sql.getAllData, {
+                fields,
+                measured,
+                addTables,
+                locations,
+                order,
+                offset: config.pageSize * (page - 1),
+                limit,
+            })) :
+            this.db.any(sql.get, {
+                fields,
+                measured,
+                addTables,
+                locations,
+                order,
+                offset: config.pageSize * (page - 1),
+                limit,
+            });
+        return returnValue;
     }
     add(type, apikey, values) {
         console.log("add api key: ", apikey);

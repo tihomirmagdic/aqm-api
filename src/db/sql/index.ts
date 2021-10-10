@@ -117,6 +117,7 @@ export const devices = {
 
 export const data = {
 	get: sql('data/get.sql'),
+	getAllData: sql('data/get-all-data.sql'),
 	add: sql('data/add.sql'),
 };
 

@@ -107,9 +107,11 @@ export class DataRepository {
   private static cs: DataColumnsets;
   private db: DB;
   private pgp: IMain;
-  // private cache: any = null;
-  // private cache: any = new CacheData(new FileCache(60));
+
+  //private cache: any = null;
+  //private cache: any = new CacheData(new FileCache(60));
   private cache: any = new CacheData(new FileCache(60));
+  private needGC = 0;
 
   constructor(db: any, pgp: any) {
     this.db = db;
@@ -265,12 +267,26 @@ export class DataRepository {
     console.log("order:", order);
     console.log("limit:", limit);
     */
-    if(page === 1) {
+    this.needGC = (this.needGC + 1) % 500;
+
+    if(page === 1 && !this.needGC && this.cache) {
       this.cache.gc();
     }
 
-    return this.cache.get({ fields, measured, locations, order, offset: config.pageSize * (page - 1), limit },
-      () => this.db.any(sql.get, {
+    const returnValue = this.cache ?
+      this.cache.get({ fields, measured, locations, order, offset: config.pageSize * (page - 1), limit },
+        () => this.db.any(sql.getAllData, {
+          fields,
+          measured,
+          addTables,
+          locations,
+          order,
+          offset: config.pageSize * (page - 1),
+          limit,
+        })
+      ):
+
+      this.db.any(sql.get, {
         fields,
         measured,
         addTables,
@@ -278,18 +294,9 @@ export class DataRepository {
         order,
         offset: config.pageSize * (page - 1),
         limit,
-      })
-    );
+      });
 
-    return this.db.any(sql.get, {
-      fields,
-      measured,
-      addTables,
-      locations,
-      order,
-      offset: config.pageSize * (page - 1),
-      limit,
-    });
+    return returnValue;
   }
 
   public add(type: string, apikey: string, values: any): any {
