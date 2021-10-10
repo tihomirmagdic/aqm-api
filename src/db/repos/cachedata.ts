@@ -97,13 +97,13 @@ export class FileCache implements CacheProvider {
   }
 
   public exists(id: string): boolean {
-    //console.log('exists id:', id);
+    // console.log('exists id:', id);
     if(fs.existsSync(id)) {
       const stats = fs.statSync(id);
-      //console.log('exists stats:', stats);
-      //console.log('Date.ISO:', new Date().toISOString());
-      //console.log('Date.now:', Date.now());
-      //console.log('test atime:', (stats.atime.valueOf() + this.validSeconds * 1000));
+      // console.log('exists stats:', stats);
+      // console.log('Date.ISO:', new Date().toISOString());
+      // console.log('Date.now:', Date.now());
+      // console.log('test atime:', (stats.atime.valueOf() + this.validSeconds * 1000));
       return (Date.now().valueOf() <= (stats.atime.valueOf() + this.validSeconds * 1000));
     } else {
       return false;
@@ -111,9 +111,9 @@ export class FileCache implements CacheProvider {
   }
 
   async setData(id: string, data: any) {
-    //console.log('setData id:', id);
+    // console.log('setData id:', id);
     // const data = [{id: 1}, {id: 2}];
-    //console.log('Date.now:', new Date().toISOString());
+    // console.log('Date.now:', new Date().toISOString());
     await fs.promises.writeFile(id, JSON.stringify(data), 'utf8');
 /*
     const buffer = await fs.promises.readFile(id, 'utf8');
@@ -128,37 +128,37 @@ export class FileCache implements CacheProvider {
   }
 
   async getData(id: string, params: any) {
-    //console.log('getData id:', id);
+    // console.log('getData id:', id);
     const buffer = await fs.promises.readFile(id, 'utf8');
-    //console.log('buffer:', buffer.substr(-5));
-    //console.log('buffer len:', buffer.length);
-    //console.log('buffer string:', buffer.toString().substr(-5));
+    // console.log('buffer:', buffer.substr(-5));
+    // console.log('buffer len:', buffer.length);
+    // console.log('buffer string:', buffer.toString().substr(-5));
     const data = JSON.parse(buffer);
-    //console.log('data:', JSON.stringify(data).substr(-5));
-    //console.log('data.length:', data.length);
+    // console.log('data:', JSON.stringify(data).substr(-5));
+    // console.log('data.length:', data.length);
     return data.slice(params.offset, params.offset + params.limit);
   }
 
   gc(): void {
-    fs.readdir(this.cacheDir, (err, files) => {
-      files.forEach(file => {
+    fs.readdir(this.cacheDir, (err: any, files: any) => {
+      files.forEach((file: string) => {
         console.log('file:', file);
         const stats = fs.statSync(this.cacheDir + '/' + file);
-        //console.log('exists stats:', stats);
-        //console.log('Date.ISO:', new Date().toISOString());
-        //console.log('Date.now:', Date.now());
-        //console.log('test atime:', (stats.atime.valueOf() + this.validSeconds * 1000));
+        // console.log('exists stats:', stats);
+        // console.log('Date.ISO:', new Date().toISOString());
+        // console.log('Date.now:', Date.now());
+        // console.log('test atime:', (stats.atime.valueOf() + this.validSeconds * 1000));
         if(!(Date.now().valueOf() <= (stats.atime.valueOf() + this.validSeconds * 1000))) {
           console.log('deleting file:', file);
-          fs.unlink(this.cacheDir + '/' + file, (err) => {
-            if (err) {
-              console.error(err)
+          fs.unlink(this.cacheDir + '/' + file, (unlinkErr: any) => {
+            if (unlinkErr) {
+              console.error(unlinkErr)
               return
             }
             console.log('file deleted:', file);
           })
         }
-  
+
       });
     });
   }
@@ -190,9 +190,9 @@ export class CacheData {
 
   public async get(params: any, cb: any): Promise<any> {
     const id = this.cache.id(params);
-    //console.log('cache id:', id);
+    // console.log('cache id:', id);
     if(this.cache.exists(id)) {
-      //console.log('cache hits');
+      // console.log('cache hits');
       return this.cache.getData(id, params);
     } else {
       console.log('cache missed');
