@@ -78,8 +78,8 @@ const sql = sqlProvider.data;
 class DataRepository {
     constructor(db, pgp) {
         //private cache: any = null;
-        this.cache = new cachedata_1.CacheData(new cachedata_1.MemoryCache(60));
-        //private cache: any = new CacheData(new FileCache(60));
+        //private cache: any = new CacheData(new MemoryCache(60));
+        this.cache = new cachedata_1.CacheData(new cachedata_1.FileCache(60));
         this.needGC = 0;
         this.existingCols = (values, columnSet) => {
             // filter existing columns from columnset or create new ones on-the-fly
