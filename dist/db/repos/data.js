@@ -12,6 +12,7 @@ const regions_1 = require("./regions");
 // import _ from "lodash";
 const Joi = __importStar(require("@hapi/joi"));
 const cachedata_1 = require("./cachedata");
+const memory_cp_cache_1 = require("./cache-providers/memory-cp-cache");
 // device, pm10, pm2_5, so2, co, o3, pb, hc, voc, temp, humidity, pressure, gps, battery, measured, received, aqi
 // schemas
 exports.shTypeCreateData = Joi.string().required().valid("full", "fast");
@@ -77,9 +78,11 @@ exports.shDataRetrievePage = Joi.object().keys({
 const sql = sqlProvider.data;
 class DataRepository {
     constructor(db, pgp) {
-        //private cache: any = null;
-        //private cache: any = new CacheData(new MemoryCache(60));
-        this.cache = new cachedata_1.CacheData(new cachedata_1.FileCache(60));
+        // private cache: any = null;
+        this.cache = new cachedata_1.CacheData(new memory_cp_cache_1.MemoryCherryPickCache(60));
+        // private cache: any = new CacheData(new MemoryCache(60));
+        // private cache: any = new CacheData(new FileCherryPickCache(60));
+        // private cache: any = new CacheData(new FileCache(60));
         this.needGC = 0;
         this.existingCols = (values, columnSet) => {
             // filter existing columns from columnset or create new ones on-the-fly

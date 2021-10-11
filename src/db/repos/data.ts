@@ -6,7 +6,11 @@ import { shNumber, shPolygon } from "./regions";
 // import _ from "lodash";
 
 import * as Joi from "@hapi/joi";
-import { CacheData, MemoryCache, FileCache } from "./cachedata";
+import { CacheData } from "./cachedata";
+import { MemoryCache } from "./cache-providers/memory-cache";
+import { MemoryCherryPickCache } from "./cache-providers/memory-cp-cache";
+import { FileCache } from "./cache-providers/file-cache";
+import { FileCherryPickCache } from "./cache-providers/file-cp-cache";
 
 // device, pm10, pm2_5, so2, co, o3, pb, hc, voc, temp, humidity, pressure, gps, battery, measured, received, aqi
 
@@ -108,9 +112,11 @@ export class DataRepository {
   private db: DB;
   private pgp: IMain;
 
-  //private cache: any = null;
-  //private cache: any = new CacheData(new MemoryCache(60));
-  private cache: any = new CacheData(new FileCache(60));
+  // private cache: any = null;
+  private cache: any = new CacheData(new MemoryCherryPickCache(60));
+  // private cache: any = new CacheData(new MemoryCache(60));
+  // private cache: any = new CacheData(new FileCherryPickCache(60));
+  // private cache: any = new CacheData(new FileCache(60));
   private needGC = 0;
 
   constructor(db: any, pgp: any) {
