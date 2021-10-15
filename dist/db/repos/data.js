@@ -60,7 +60,7 @@ exports.shLocations = Joi.object()
     .keys({
     devices: Joi.array().items(Joi.number()),
     owner: Joi.boolean().allow(true),
-    name: Joi.string(),
+    name: Joi.number(),
     polygon: regions_1.shPolygon,
     circle: shCircle,
 })

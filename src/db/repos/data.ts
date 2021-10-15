@@ -87,7 +87,7 @@ export const shLocations = Joi.object()
   .keys({
     devices: Joi.array().items(Joi.number()),
     owner: Joi.boolean().allow(true),
-    name: Joi.string(),
+    name: Joi.number(),
     polygon: shPolygon,
     circle: shCircle,
   })
