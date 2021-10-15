@@ -323,7 +323,7 @@ export const defineRoutes = (app: any, config: any) => {
 
 	// get regions by IDs
 	routes.dbPOST("/regions",
-		(req: Request) => multiValidator([valid(req.body, shDefaultIDsAsText)]),
+		(req: Request) => multiValidator([valid(req.body, shDefaultIDs)]),
 		(db: DB, values: any[]) => db.regions.getByIDs(values[0].ids));
 
 	// create new region
@@ -338,7 +338,7 @@ export const defineRoutes = (app: any, config: any) => {
 
 	// remove region(s)
 	routes.dbDELETE("/regions",
-		(req: Request) => multiValidator([valid(req.body, shDefaultIDsAsText)]),
+		(req: Request) => multiValidator([valid(req.body, shDefaultIDs)]),
 		(db: DB, values: any) => db.regions.delete(values[0].ids));
 
 	//////////////////////////////////////////////

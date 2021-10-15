@@ -7,7 +7,7 @@ import { preparePolygonValues } from "../../server/handler";
 
 import * as Joi from "@hapi/joi";
 
-import { shText } from "../../server/default-schemas";
+import { shID } from "../../server/default-schemas";
 
 // id, type, name, coordinates
 
@@ -21,7 +21,6 @@ export const shPolygons = Joi.object().keys({
 });
 
 export const shRegionsCreate = Joi.object().keys({
-  id: Joi.string().required(),
   type: Joi.string().required(),
   name: Joi.string().required(),
   coordinates: shPolygon.required(),
@@ -29,7 +28,7 @@ export const shRegionsCreate = Joi.object().keys({
 });
 
 export const shRegionsValues = Joi.object().keys({
-  id: Joi.string(),
+  id: Joi.number(),
   type: Joi.string(),
   name: Joi.string(),
   coordinates: shPolygon.required(),
@@ -37,7 +36,7 @@ export const shRegionsValues = Joi.object().keys({
 });
 
 export const shRegionsUpdate = Joi.object().keys({
-  ids: Joi.array().items(shText).required(),
+  ids: Joi.array().items(shID).required(),
   values: shRegionsValues.required(),
 });
 

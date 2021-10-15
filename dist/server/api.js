@@ -167,13 +167,13 @@ exports.defineRoutes = (app, config) => {
     // get all regions
     routes.dbGET("/regions", null, (db) => db.regions.get());
     // get regions by IDs
-    routes.dbPOST("/regions", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDsAsText)]), (db, values) => db.regions.getByIDs(values[0].ids));
+    routes.dbPOST("/regions", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDs)]), (db, values) => db.regions.getByIDs(values[0].ids));
     // create new region
     routes.dbPOST("/regions/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeCreate), handler_1.valid(req.body, regions_1.shRegionsCreate)]), (db, values) => db.regions.add(values[0].type, values[1]));
     // update region(s)
     routes.dbPUT("/regions/:type", (req) => handler_1.multiValidator([handler_1.valid(req.params, default_schemas_1.shDefaultTypeUpdate), handler_1.valid(req.body, regions_1.shRegionsUpdate)]), (db, values) => db.regions.update(values[0].type, values[1]));
     // remove region(s)
-    routes.dbDELETE("/regions", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDsAsText)]), (db, values) => db.regions.delete(values[0].ids));
+    routes.dbDELETE("/regions", (req) => handler_1.multiValidator([handler_1.valid(req.body, default_schemas_1.shDefaultIDs)]), (db, values) => db.regions.delete(values[0].ids));
     //////////////////////////////////////////////
     // Owners REST API
     //////////////////////////////////////////////

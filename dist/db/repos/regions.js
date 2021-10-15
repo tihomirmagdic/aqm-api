@@ -22,21 +22,20 @@ exports.shPolygons = Joi.object().keys({
     type: Joi.string().valid('Polygon').required()
 });
 exports.shRegionsCreate = Joi.object().keys({
-    id: Joi.string().required(),
     type: Joi.string().required(),
     name: Joi.string().required(),
     coordinates: exports.shPolygon.required(),
     gtype: Joi.string().valid('Polygon').required()
 });
 exports.shRegionsValues = Joi.object().keys({
-    id: Joi.string(),
+    id: Joi.number(),
     type: Joi.string(),
     name: Joi.string(),
     coordinates: exports.shPolygon.required(),
     gtype: Joi.string().valid('Polygon').required()
 });
 exports.shRegionsUpdate = Joi.object().keys({
-    ids: Joi.array().items(default_schemas_1.shText).required(),
+    ids: Joi.array().items(default_schemas_1.shID).required(),
     values: exports.shRegionsValues.required(),
 });
 const sql = sqlProvider.regions;
