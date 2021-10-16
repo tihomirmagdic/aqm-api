@@ -28,7 +28,6 @@ exports.shRegionsCreate = Joi.object().keys({
     gtype: Joi.string().valid('Polygon').required()
 });
 exports.shRegionsValues = Joi.object().keys({
-    id: Joi.number(),
     type: Joi.string(),
     name: Joi.string(),
     coordinates: exports.shPolygon.required(),
@@ -113,7 +112,7 @@ class RegionsRepository {
                 }
             });
             cs.insert = new helpers.ColumnSet(colPosition);
-            cs.update = new helpers.ColumnSet(["type", "name", colPosition, "gtype"]);
+            cs.update = new helpers.ColumnSet([colPosition, ...Object.keys(exports.shRegionsValues.describe().keys).filter((key) => key !== "coordinates")]);
             RegionsRepository.cs = cs;
         }
     }

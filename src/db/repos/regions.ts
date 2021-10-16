@@ -28,7 +28,6 @@ export const shRegionsCreate = Joi.object().keys({
 });
 
 export const shRegionsValues = Joi.object().keys({
-  id: Joi.number(),
   type: Joi.string(),
   name: Joi.string(),
   coordinates: shPolygon.required(),
@@ -132,7 +131,7 @@ export class RegionsRepository {
         }
       });
       cs.insert = new helpers.ColumnSet(colPosition);
-      cs.update = new helpers.ColumnSet([ "type", "name", colPosition, "gtype" ]);
+      cs.update = new helpers.ColumnSet([colPosition, ...Object.keys(shRegionsValues.describe().keys).filter((key: string) => key !== "coordinates")]);
 
       RegionsRepository.cs = cs;
     }
