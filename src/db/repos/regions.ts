@@ -88,8 +88,11 @@ export class RegionsRepository {
   public update(type: string, data: any): any {
     const where = data.ids;
     const values = data.values;
+    console.log("where:", where);
+    console.log("values:", values);
     values.coordinates = preparePolygonValues(values.coordinates);
     const set = this.pgp.helpers.sets(values, RegionsRepository.cs.update);
+    console.log("set:", set);
     const returning = type === "full" ? "returning id, type, name, gtype, (ST_AsGeoJSON(coordinates)::json->>'coordinates')::json coordinates" : "";
     if (type === "full") {
       return this.db.any(sql.update, { set, where, returning });
@@ -129,7 +132,7 @@ export class RegionsRepository {
         }
       });
       cs.insert = new helpers.ColumnSet(colPosition);
-      cs.update = new helpers.ColumnSet(colPosition);
+      cs.update = new helpers.ColumnSet([ "type", "name", colPosition, "gtype" ]);
 
       RegionsRepository.cs = cs;
     }
