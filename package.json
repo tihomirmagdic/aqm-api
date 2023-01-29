@@ -35,7 +35,7 @@
     "watch:assets": "onchange \"./src/db/sql/**/*\" -- cp -r src/db/sql/ dist/db/",
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
     "tsc": "tsc",
-    "build": "ls",
+    "build": "ls -s",
     "build0": "npm-run-all clean lint tsc copy:assets",
     "dev:start": "npm-run-all tsc start",
     "dev0": "nodemon --watch src -e ts,ejs --exec npm run dev:start",
