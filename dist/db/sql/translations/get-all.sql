@@ -1,0 +1,1 @@
+select * from airq.translations order by ordernum
