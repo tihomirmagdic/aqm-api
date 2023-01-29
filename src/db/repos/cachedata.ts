@@ -1,7 +1,6 @@
 import { CacheProvider } from "./cache-providers/cache-provider-intf";
 
 export class CacheData {
-
   private cache: CacheProvider;
 
   constructor(cache: CacheProvider) {
@@ -27,13 +26,14 @@ export class CacheData {
   public async get(params: any, cb: any): Promise<any> {
     const id = this.cache.id(params);
     // console.log('cache id:', id);
-    if(this.cache.exists(id)) {
+    if (this.cache.exists(id)) {
       // console.log('cache hits');
       return this.cache.getData(id, params);
     } else {
-      console.log('cache missed');
+      console.log("cache missed");
+      console.log("cb:" + cb);
       const data = await cb(params);
-      console.log('cache data len:', data.length);
+      console.log("cache data len:", data.length);
       return await this.cache.fetchAndSetData(id, data, params);
       // await this.cache.setData(id, data);
       // return this.cache.getData(id, params);

@@ -65,6 +65,23 @@ const pgp: IMain = pgPromise(initOptions);
 // console.log("dbConfig:", dbConfig);
 const db: ExtendedProtocol = pgp(dbConfig);
 
+// tests connection and returns Postgres server version,
+// if successful; or else rejects with connection error:
+async function testConnection() {
+  const c = await db.connect(); // try to connect
+  c.done(); // success, release connection
+  return c.client.serverVersion; // return server version
+}
+
+console.log("testing connection...");
+testConnection()
+  .then((v) => {
+    console.log("version: ", v);
+  })
+  .catch((error) => {
+    console.log("ERROR:", error.message || error);
+  });
+
 // Initializing optional diagnostics:
 Diagnostics.init(initOptions);
 

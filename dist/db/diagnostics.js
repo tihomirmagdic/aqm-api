@@ -16,14 +16,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const os = require("os");
 const fs = require("fs");
 const pgMonitor = __importStar(require("pg-monitor"));
-pgMonitor.setTheme('matrix'); // changing the default theme;
+pgMonitor.setTheme("matrix"); // changing the default theme;
 pgMonitor.setDetailed(true);
 // Flag to indicate whether we are in a DEV environment:
-console.log('process.env.NODE_ENV:', process.env.NODE_ENV);
-const $DEV = process.env.NODE_ENV === 'development';
-console.log('$DEV: ' + $DEV);
+console.log("process.env.NODE_ENV:", process.env.NODE_ENV);
+const $DEV = process.env.NODE_ENV === "development";
+console.log("$DEV: " + $DEV);
 // Log file for database-related errors:
-const logFile = './errors.log';
+const logFile = "./errors.log";
 // Below we are logging errors exactly the way they are reported by pg-monitor,
 // which you can tweak any way you like, as parameter 'info' provides all the
 // necessary details for that.
@@ -34,7 +34,7 @@ pgMonitor.setLog((msg, info) => {
     // because this is how we set it up below.
     // And the check below is for DEV environment only, as we want to log
     // errors only, or else the file will grow out of proportion in no time.
-    if (info.event === 'error') {
+    if (info.event === "error") {
         let logText = os.EOL + msg; // line break + next error message;
         if (info.time) {
             // If it is a new error being reported,
@@ -63,7 +63,7 @@ class Diagnostics {
         else {
             // In a PROD environment we should only attach to the type of events
             // that we intend to log. And we are only logging event 'error' here:
-            pgMonitor.attach(options, ['error']);
+            pgMonitor.attach(options, ["error"]);
         }
     }
 }

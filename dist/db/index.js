@@ -47,6 +47,21 @@ exports.pgp = pgp;
 // console.log("dbConfig:", dbConfig);
 const db = pgp(db_config_1.dbConfig);
 exports.db = db;
+// tests connection and returns Postgres server version,
+// if successful; or else rejects with connection error:
+async function testConnection() {
+    const c = await db.connect(); // try to connect
+    c.done(); // success, release connection
+    return c.client.serverVersion; // return server version
+}
+console.log("testing connection...");
+testConnection()
+    .then((v) => {
+    console.log("version: ", v);
+})
+    .catch((error) => {
+    console.log("ERROR:", error.message || error);
+});
 // Initializing optional diagnostics:
 diagnostics_1.Diagnostics.init(initOptions);
 class DBPool {
