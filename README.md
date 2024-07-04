@@ -443,7 +443,7 @@ equivalent to:
 order=[id,-name]
 
 or
-order[]=id&fields[]=-name
+order[]=id&order[]=-name
 ```
 
 #### Limit
